@@ -11,24 +11,26 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Events]';
 
 export function buildEventsPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Islamic Events',
+    title: _('Islamic Events'),
     icon_name: 'x-office-calendar-symbolic',
   });
 
   // ── Friday ────────────────────────────────────────────────────────
   const fridayGroup = new Adw.PreferencesGroup({
-    title: 'Friday Reminders',
-    description: 'Notifications for Thursday night, Friday morning, and Friday afternoon.',
+    title: _('Friday Reminders'),
+    description: _('Notifications for Thursday night, Friday morning, and Friday afternoon.'),
   });
   page.add(fridayGroup);
 
   const fridayEnabledRow = new Adw.SwitchRow({
-    title: 'Enable Friday Reminders',
-    subtitle: 'Notifications for Thursday night, Friday morning, and Friday afternoon.',
+    title: _('Enable Friday Reminders'),
+    subtitle: _('Notifications for Thursday night, Friday morning, and Friday afternoon.'),
   });
   fridayEnabledRow.set_active(settings.get_boolean('events-friday-enabled'));
   fridayEnabledRow.connect('notify::active', (_row) => {
@@ -50,8 +52,8 @@ export function buildEventsPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const thursdayRow = new Adw.ActionRow({
-    title: 'Thursday Night Time',
-    subtitle: 'Hour of the Thursday night reminder (0–23).',
+    title: _('Thursday Night Time'),
+    subtitle: _('Hour of the Thursday night reminder (0–23).'),
   });
   thursdayRow.add_suffix(thursdaySpin);
   thursdayRow.activatable_widget = thursdaySpin;
@@ -73,8 +75,8 @@ export function buildEventsPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const morningRow = new Adw.ActionRow({
-    title: 'Friday Morning Time',
-    subtitle: 'Hour of the Friday morning reminder (0–23).',
+    title: _('Friday Morning Time'),
+    subtitle: _('Hour of the Friday morning reminder (0–23).'),
   });
   morningRow.add_suffix(morningSpin);
   morningRow.activatable_widget = morningSpin;
@@ -96,8 +98,8 @@ export function buildEventsPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const afternoonRow = new Adw.ActionRow({
-    title: 'Friday Afternoon Time',
-    subtitle: 'Hour of the Friday afternoon reminder (0–23).',
+    title: _('Friday Afternoon Time'),
+    subtitle: _('Hour of the Friday afternoon reminder (0–23).'),
   });
   afternoonRow.add_suffix(afternoonSpin);
   afternoonRow.activatable_widget = afternoonSpin;
@@ -108,14 +110,14 @@ export function buildEventsPage(settings) {
 
   // ── Ashura ────────────────────────────────────────────────────────
   const ashuraGroup = new Adw.PreferencesGroup({
-    title: 'Ashura',
-    description: 'Reminders for the Day of Ashura (Muharram 10).',
+    title: _('Ashura'),
+    description: _('Reminders for the Day of Ashura (Muharram 10).'),
   });
   page.add(ashuraGroup);
 
   const ashuraEnabledRow = new Adw.SwitchRow({
-    title: 'Enable Ashura Reminder',
-    subtitle: 'Reminder on Muharram 10 (Ashura).',
+    title: _('Enable Ashura Reminder'),
+    subtitle: _('Reminder on Muharram 10 (Ashura).'),
   });
   ashuraEnabledRow.set_active(settings.get_boolean('events-ashura-enabled'));
   ashuraEnabledRow.connect('notify::active', (_row) => {
@@ -125,8 +127,8 @@ export function buildEventsPage(settings) {
   ashuraGroup.add(ashuraEnabledRow);
 
   const ashuraDayBeforeRow = new Adw.SwitchRow({
-    title: 'Ashura Day-Before',
-    subtitle: 'Show a heads-up the day before Ashura.',
+    title: _('Ashura Day-Before'),
+    subtitle: _('Show a heads-up the day before Ashura.'),
   });
   ashuraDayBeforeRow.set_active(settings.get_boolean('events-ashura-daybefore'));
   ashuraDayBeforeRow.connect('notify::active', (_row) => {
@@ -136,14 +138,14 @@ export function buildEventsPage(settings) {
 
   // ── Arafah ────────────────────────────────────────────────────────
   const arafahGroup = new Adw.PreferencesGroup({
-    title: 'Day of Arafah',
-    description: 'Reminders for the Day of Arafah (Dhul Hijjah 9).',
+    title: _('Day of Arafah'),
+    description: _('Reminders for the Day of Arafah (Dhul Hijjah 9).'),
   });
   page.add(arafahGroup);
 
   const arafahEnabledRow = new Adw.SwitchRow({
-    title: 'Enable Arafah Reminder',
-    subtitle: 'Reminder on Dhul Hijjah 9 (Day of Arafah).',
+    title: _('Enable Arafah Reminder'),
+    subtitle: _('Reminder on Dhul Hijjah 9 (Day of Arafah).'),
   });
   arafahEnabledRow.set_active(settings.get_boolean('events-arafah-enabled'));
   arafahEnabledRow.connect('notify::active', (_row) => {
@@ -153,8 +155,8 @@ export function buildEventsPage(settings) {
   arafahGroup.add(arafahEnabledRow);
 
   const arafahDayBeforeRow = new Adw.SwitchRow({
-    title: 'Arafah Day-Before',
-    subtitle: 'Show a heads-up the day before Arafah.',
+    title: _('Arafah Day-Before'),
+    subtitle: _('Show a heads-up the day before Arafah.'),
   });
   arafahDayBeforeRow.set_active(settings.get_boolean('events-arafah-daybefore'));
   arafahDayBeforeRow.connect('notify::active', (_row) => {
@@ -164,14 +166,14 @@ export function buildEventsPage(settings) {
 
   // ── White Days ────────────────────────────────────────────────────
   const whiteGroup = new Adw.PreferencesGroup({
-    title: 'White Days',
-    description: 'Reminder on the 13th–15th of each Hijri month.',
+    title: _('White Days'),
+    description: _('Reminder on the 13th–15th of each Hijri month.'),
   });
   page.add(whiteGroup);
 
   const whiteEnabledRow = new Adw.SwitchRow({
-    title: 'Enable White Days',
-    subtitle: 'Reminder on the 13th–15th of each Hijri month.',
+    title: _('Enable White Days'),
+    subtitle: _('Reminder on the 13th–15th of each Hijri month.'),
   });
   whiteEnabledRow.set_active(settings.get_boolean('events-whitedays-enabled'));
   whiteEnabledRow.connect('notify::active', (_row) => {

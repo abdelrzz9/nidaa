@@ -27,6 +27,7 @@ import { getHijriDate } from '../../core/hijri/index.js';
 import { isRamadan } from '../../core/ramadan/index.js';
 import { getNextIslamicEvent } from '../../core/events/index.js';
 import { _, getLanguage } from '../../core/i18n/index.js';
+import { _bool } from '../../core/settings-helpers.js';
 
 const LOG_PREFIX = '[Nidaa:Popup]';
 
@@ -253,6 +254,127 @@ export class PrayerPopupSection {
         this._rows.push(eventLabel);
       }
     }
+  }
+
+  destroy() {
+    this._clear();
+    this.actor.destroy();
+    this.actor = null;
+  }
+}
+
+// ------------------------------------------------------------------
+//  Adhkar completion popup section
+// ------------------------------------------------------------------
+
+/**
+ * Displays today's adhkar completion status in the popup menu:
+ *
+ *   📿 Adhkar
+ *   🌅 Morning ✓          🌆 Evening -
+ *   ✓ Fajr  ✓ Dhuhr  - Asr  ✓ Maghrib  - Isha
+ *
+ * Usage:
+ *   const adhkar = new AdhkarPopupSection(settings);
+ *   menu.addMenuItem(adhkar);
+ *   adhkar.update();
+ */
+export class AdhkarPopupSection {
+  /**
+   * @param {object|null} settings - GSettings instance
+   */
+  constructor(settings) {
+    this._settings = settings;
+
+    /** @type {St.BoxLayout} */
+    this.actor = new St.BoxLayout({
+      style_class: 'nidaa-adhkar-popup',
+      vertical: true,
+      x_fill: true,
+    });
+
+    this._children = [];
+  }
+
+  _clear() {
+    for (const child of this._children) {
+      child.destroy();
+    }
+    this._children = [];
+  }
+
+  /**
+   * Refresh the display from GSettings.
+   */
+  update() {
+    this._clear();
+
+    const settings = this._settings;
+
+    // Section header
+    const header = new St.Label({
+      text: `📿 ${_('Adhkar')}`,
+      style_class: 'nidaa-adhkar-header',
+    });
+    this.actor.add_child(header);
+    this._children.push(header);
+
+    // Morning / Evening row
+    const meRow = new St.BoxLayout({
+      style_class: 'nidaa-adhkar-row',
+      x_fill: true,
+      x_expand: true,
+    });
+
+    const morningDone = _bool(settings, 'adhkar-morning-completed', false);
+    const morningLabel = new St.Label({
+      text: `🌅 ${_('Morning')} ${morningDone ? '✓' : '-'}`,
+      style_class: `nidaa-adhkar-status nidaa-adhkar-${morningDone ? 'done' : 'pending'}`,
+      y_align: Clutter.ActorAlign.CENTER,
+      x_expand: true,
+    });
+    meRow.add_child(morningLabel);
+
+    const eveningDone = _bool(settings, 'adhkar-evening-completed', false);
+    const eveningLabel = new St.Label({
+      text: `🌆 ${_('Evening')} ${eveningDone ? '✓' : '-'}`,
+      style_class: `nidaa-adhkar-status nidaa-adhkar-${eveningDone ? 'done' : 'pending'}`,
+      y_align: Clutter.ActorAlign.CENTER,
+      x_expand: true,
+    });
+    meRow.add_child(eveningLabel);
+
+    this.actor.add_child(meRow);
+    this._children.push(meRow);
+
+    // Post-prayer row
+    const prayers = [
+      { key: 'fajr', label: _('Fajr') },
+      { key: 'dhuhr', label: _('Dhuhr') },
+      { key: 'asr', label: _('Asr') },
+      { key: 'maghrib', label: _('Maghrib') },
+      { key: 'isha', label: _('Isha') },
+    ];
+
+    const ppRow = new St.BoxLayout({
+      style_class: 'nidaa-adhkar-row',
+      x_fill: true,
+      x_expand: true,
+    });
+
+    for (const { key, label } of prayers) {
+      const done = _bool(settings, `adhkar-post-${key}-completed`, false);
+      const statusLabel = new St.Label({
+        text: `${done ? '✓' : '-'} ${label}`,
+        style_class: `nidaa-adhkar-status nidaa-adhkar-${done ? 'done' : 'pending'}`,
+        y_align: Clutter.ActorAlign.CENTER,
+        x_expand: true,
+      });
+      ppRow.add_child(statusLabel);
+    }
+
+    this.actor.add_child(ppRow);
+    this._children.push(ppRow);
   }
 
   destroy() {

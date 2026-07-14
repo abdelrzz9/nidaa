@@ -14,15 +14,17 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Quran]';
 
 const FREQUENCY_LABELS = [
-  'Daily',
-  'Weekly (Fridays)',
-  'After Fajr',
-  'After Isha',
-  'Every 6 Hours',
-  'Random Time',
+  _('Daily'),
+  _('Weekly (Fridays)'),
+  _('After Fajr'),
+  _('After Isha'),
+  _('Every 6 Hours'),
+  _('Random Time'),
 ];
 
 const FREQUENCY_KEYS = [
@@ -42,7 +44,7 @@ const FREQUENCY_KEYS = [
  */
 export function buildQuranPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Quran',
+    title: _('Quran'),
     icon_name: 'accessories-dictionary-symbolic',
   });
 
@@ -50,15 +52,15 @@ export function buildQuranPage(settings) {
   //  General settings
   // ----------------------------------------------------------------
   const generalGroup = new Adw.PreferencesGroup({
-    title: 'Reading Reminder',
-    description: 'Configure how often you receive Quran reading reminders.',
+    title: _('Reading Reminder'),
+    description: _('Configure how often you receive Quran reading reminders.'),
   });
   page.add(generalGroup);
 
   // --- Master toggle ---
   const enabledRow = new Adw.SwitchRow({
-    title: 'Enable Quran Reminders',
-    subtitle: 'Show periodic reminders to read Quran.',
+    title: _('Enable Quran Reminders'),
+    subtitle: _('Show periodic reminders to read Quran.'),
   });
   enabledRow.set_active(settings.get_boolean('quran-enabled'));
   enabledRow.connect('notify::active', (_row) => {
@@ -69,8 +71,8 @@ export function buildQuranPage(settings) {
 
   // --- Frequency dropdown ---
   const frequencyRow = new Adw.ComboRow({
-    title: 'Reminder Frequency',
-    subtitle: 'How often to send the Quran reading reminder.',
+    title: _('Reminder Frequency'),
+    subtitle: _('How often to send the Quran reading reminder.'),
   });
   const frequencyModel = Gtk.StringList.new(FREQUENCY_LABELS);
   frequencyRow.set_model(frequencyModel);
@@ -95,8 +97,8 @@ export function buildQuranPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const offsetRow = new Adw.ActionRow({
-    title: 'Offset After Prayer',
-    subtitle: 'Minutes after the prayer to send the reminder.',
+    title: _('Offset After Prayer'),
+    subtitle: _('Minutes after the prayer to send the reminder.'),
   });
   offsetRow.add_suffix(offsetSpin);
   offsetRow.activatable_widget = offsetSpin;
@@ -119,8 +121,8 @@ export function buildQuranPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const windowStartRow = new Adw.ActionRow({
-    title: 'Window Start Hour',
-    subtitle: 'Earliest hour for the random reminder (0–23).',
+    title: _('Window Start Hour'),
+    subtitle: _('Earliest hour for the random reminder (0–23).'),
   });
   windowStartRow.add_suffix(windowStartSpin);
   windowStartRow.activatable_widget = windowStartSpin;
@@ -143,8 +145,8 @@ export function buildQuranPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const windowEndRow = new Adw.ActionRow({
-    title: 'Window End Hour',
-    subtitle: 'Latest hour for the random reminder (1–24).',
+    title: _('Window End Hour'),
+    subtitle: _('Latest hour for the random reminder (1–24).'),
   });
   windowEndRow.add_suffix(windowEndSpin);
   windowEndRow.activatable_widget = windowEndSpin;
@@ -157,8 +159,8 @@ export function buildQuranPage(settings) {
   //  Daily goal
   // ----------------------------------------------------------------
   const goalGroup = new Adw.PreferencesGroup({
-    title: 'Daily Goal',
-    description: 'Set a target number of pages to read each day.',
+    title: _('Daily Goal'),
+    description: _('Set a target number of pages to read each day.'),
   });
   page.add(goalGroup);
 
@@ -175,8 +177,8 @@ export function buildQuranPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const goalRow = new Adw.ActionRow({
-    title: 'Pages per Day',
-    subtitle: 'Your daily Quran reading goal.',
+    title: _('Pages per Day'),
+    subtitle: _('Your daily Quran reading goal.'),
   });
   goalRow.add_suffix(goalSpin);
   goalRow.activatable_widget = goalSpin;

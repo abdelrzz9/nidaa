@@ -13,6 +13,8 @@
 
 import Gio from 'gi://Gio';
 
+import { _ } from '../../core/i18n/index.js';
+
 import { buildPrayerPage } from './prayer_page.js';
 import { buildLocationPage } from './location_page.js';
 import { buildAdhkarPage } from './adhkar_page.js';

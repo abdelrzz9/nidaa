@@ -24,6 +24,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
+import { _bool, _int, _string, localTimezoneOffset, METHODS_BY_IDX, HIGH_LAT_RULES } from '../settings-helpers.js';
 import { calculatePrayerTimes } from '../prayer/times.js';
 import { createEvent } from '../scheduler/event.js';
 import { _ } from '../i18n/index.js';
@@ -74,51 +75,6 @@ function loadAdhkarContent() {
     console.error(`${LOG_PREFIX} failed to load adhkar content: ${err}`);
     return null;
   }
-}
-
-// ------------------------------------------------------------------
-//  GSettings helpers
-// ------------------------------------------------------------------
-
-function _bool(settings, key, fallback) {
-  try {
-    return settings ? settings.get_boolean(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function _int(settings, key, fallback) {
-  try {
-    return settings ? settings.get_int(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function _string(settings, key, fallback) {
-  try {
-    return settings ? settings.get_string(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-// ------------------------------------------------------------------
-//  Timezone helper
-// ------------------------------------------------------------------
-
-/**
- * Compute the local UTC offset in hours using pure JavaScript.
- */
-function localTimezoneOffset() {
-  const now = new Date();
-  const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-  const localMinutes = now.getHours() * 60 + now.getMinutes();
-  let diff = (localMinutes - utcMinutes) / 60;
-  if (diff > 12) diff -= 24;
-  if (diff < -12) diff += 24;
-  return diff;
 }
 
 // ------------------------------------------------------------------
@@ -301,9 +257,6 @@ export function createAdhkarProvider({ location, settings, now: injectableNow })
 // ------------------------------------------------------------------
 //  Settings resolution helpers
 // ------------------------------------------------------------------
-
-const METHODS_BY_IDX = ['MWL', 'ISNA', 'Egypt', 'UmmAlQura', 'Karachi', 'Tehran', 'Jafari', 'Custom'];
-const HIGH_LAT_RULES = ['None', 'MiddleOfNight', 'OneSeventh', 'AngleBased'];
 
 function _resolveMethod(settings) {
   const idx = _int(settings, 'prayer-method', 0);

@@ -241,6 +241,43 @@
       <summary>Post-prayer adhkar after Isha</summary>
     </key>
 
+    <key name="adhkar-morning-completed" type="b">
+      <default>false</default>
+      <summary>Morning adhkar completed today</summary>
+      <description>Reset daily: tracks whether the user has completed the morning adhkar today.</description>
+    </key>
+
+    <key name="adhkar-evening-completed" type="b">
+      <default>false</default>
+      <summary>Evening adhkar completed today</summary>
+      <description>Reset daily: tracks whether the user has completed the evening adhkar today.</description>
+    </key>
+
+    <key name="adhkar-post-fajr-completed" type="b">
+      <default>false</default>
+      <summary>Post-Fajr adhkar completed today</summary>
+    </key>
+
+    <key name="adhkar-post-dhuhr-completed" type="b">
+      <default>false</default>
+      <summary>Post-Dhuhr adhkar completed today</summary>
+    </key>
+
+    <key name="adhkar-post-asr-completed" type="b">
+      <default>false</default>
+      <summary>Post-Asr adhkar completed today</summary>
+    </key>
+
+    <key name="adhkar-post-maghrib-completed" type="b">
+      <default>false</default>
+      <summary>Post-Maghrib adhkar completed today</summary>
+    </key>
+
+    <key name="adhkar-post-isha-completed" type="b">
+      <default>false</default>
+      <summary>Post-Isha adhkar completed today</summary>
+    </key>
+
     <!-- ======== Quran Reading ======== -->
     <key name="quran-enabled" type="b">
       <default>true</default>

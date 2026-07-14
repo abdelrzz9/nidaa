@@ -21,6 +21,8 @@ import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Prayer]';
 
 /**
@@ -28,14 +30,14 @@ const LOG_PREFIX = '[Nidaa:Prefs:Prayer]';
  * Order matches the GSettings integer keys (0–7).
  */
 const METHOD_LABELS = [
-  'Muslim World League (MWL)',
-  'Islamic Society of North America (ISNA)',
-  'Egyptian General Authority of Survey',
-  'Umm Al-Qura University (Makkah)',
-  'University of Islamic Sciences, Karachi',
-  'Institute of Geophysics, University of Tehran',
-  'Leva Research Institute (Qom) / Shia Ithna Ashari',
-  'Custom (user-supplied angles)',
+  _('Muslim World League (MWL)'),
+  _('Islamic Society of North America (ISNA)'),
+  _('Egyptian General Authority of Survey'),
+  _('Umm Al-Qura University (Makkah)'),
+  _('University of Islamic Sciences, Karachi'),
+  _('Institute of Geophysics, University of Tehran'),
+  _('Leva Research Institute (Qom) / Shia Ithna Ashari'),
+  _('Custom (user-supplied angles)'),
 ];
 
 /**
@@ -43,29 +45,29 @@ const METHOD_LABELS = [
  * Order matches the GSettings integer keys (0–3).
  */
 const HIGH_LAT_LABELS = [
-  'None',
-  'Angle-Based (recommended)',
-  'Middle of Night',
-  'One-Seventh of Night',
+  _('None'),
+  _('Angle-Based (recommended)'),
+  _('Middle of Night'),
+  _('One-Seventh of Night'),
 ];
 
 /**
  * Human-readable labels for madhab (Asr method).
  */
 const MADHAB_LABELS = [
-  'Shafii (standard)',
-  'Hanafi',
+  _('Shafii (standard)'),
+  _('Hanafi'),
 ];
 
 /**
  * Prayer names and their corresponding GSettings offset keys.
  */
 const PRAYER_OFFSETS = [
-  { name: 'Fajr', key: 'offset-fajr' },
-  { name: 'Dhuhr', key: 'offset-dhuhr' },
-  { name: 'Asr', key: 'offset-asr' },
-  { name: 'Maghrib', key: 'offset-maghrib' },
-  { name: 'Isha', key: 'offset-isha' },
+  { name: _('Fajr'), key: 'offset-fajr' },
+  { name: _('Dhuhr'), key: 'offset-dhuhr' },
+  { name: _('Asr'), key: 'offset-asr' },
+  { name: _('Maghrib'), key: 'offset-maghrib' },
+  { name: _('Isha'), key: 'offset-isha' },
 ];
 
 /**
@@ -76,7 +78,7 @@ const PRAYER_OFFSETS = [
  */
 export function buildPrayerPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Prayer',
+    title: _('Prayer'),
     icon_name: 'alarm-symbolic',
   });
 
@@ -84,15 +86,15 @@ export function buildPrayerPage(settings) {
   //  Calculation method
   // ----------------------------------------------------------------
   const methodGroup = new Adw.PreferencesGroup({
-    title: 'Calculation Method',
-    description: 'Choose the method used to calculate prayer times.',
+    title: _('Calculation Method'),
+    description: _('Choose the method used to calculate prayer times.'),
   });
   page.add(methodGroup);
 
   // --- Method dropdown ---
   const methodRow = new Adw.ComboRow({
-    title: 'Method',
-    subtitle: 'Different organizations use slightly different twilight angles.',
+    title: _('Method'),
+    subtitle: _('Different organizations use slightly different twilight angles.'),
   });
   const methodModel = Gtk.StringList.new(METHOD_LABELS);
   methodRow.set_model(methodModel);
@@ -106,8 +108,8 @@ export function buildPrayerPage(settings) {
 
   // --- Custom angles (revealed when method = Custom) ---
   const customRevealer = new Adw.RevealerRow({
-    title: 'Custom Angles',
-    subtitle: 'Set your own Fajr and Isha twilight angles.',
+    title: _('Custom Angles'),
+    subtitle: _('Set your own Fajr and Isha twilight angles.'),
   });
   const customBox = new Gtk.Box({
     orientation: Gtk.Orientation.VERTICAL,
@@ -133,7 +135,7 @@ export function buildPrayerPage(settings) {
     orientation: Gtk.Orientation.HORIZONTAL,
     spacing: 12,
   });
-  fajrBox.append(new Gtk.Label({ label: 'Fajr angle (°)', hexpand: true, xalign: 0 }));
+  fajrBox.append(new Gtk.Label({ label: _('Fajr angle (°)'), hexpand: true, xalign: 0 }));
   fajrBox.append(fajrSpin);
   customBox.append(fajrBox);
 
@@ -158,7 +160,7 @@ export function buildPrayerPage(settings) {
     orientation: Gtk.Orientation.HORIZONTAL,
     spacing: 12,
   });
-  ishaBox.append(new Gtk.Label({ label: 'Isha angle (°)', hexpand: true, xalign: 0 }));
+  ishaBox.append(new Gtk.Label({ label: _('Isha angle (°)'), hexpand: true, xalign: 0 }));
   ishaBox.append(ishaSpin);
   customBox.append(ishaBox);
 
@@ -173,14 +175,14 @@ export function buildPrayerPage(settings) {
   //  Madhab (Asr method)
   // ----------------------------------------------------------------
   const madhabGroup = new Adw.PreferencesGroup({
-    title: 'Madhab',
-    description: 'Determines how Asr prayer time is calculated.',
+    title: _('Madhab'),
+    description: _('Determines how Asr prayer time is calculated.'),
   });
   page.add(madhabGroup);
 
   const madhabRow = new Adw.ComboRow({
-    title: 'Asr Calculation',
-    subtitle: 'Shafii uses shadow length = object height; Hanafi uses double.',
+    title: _('Asr Calculation'),
+    subtitle: _('Shafii uses shadow length = object height; Hanafi uses double.'),
   });
   const madhabModel = Gtk.StringList.new(MADHAB_LABELS);
   madhabRow.set_model(madhabModel);
@@ -195,14 +197,14 @@ export function buildPrayerPage(settings) {
   //  High latitude rule
   // ----------------------------------------------------------------
   const highLatGroup = new Adw.PreferencesGroup({
-    title: 'High Latitude Rule',
-    description: 'For locations above ~48° latitude where twilight persists.',
+    title: _('High Latitude Rule'),
+    description: _('For locations above ~48° latitude where twilight persists.'),
   });
   page.add(highLatGroup);
 
   const highLatRow = new Adw.ComboRow({
-    title: 'Night Method',
-    subtitle: 'How to determine Fajr/Isha when the sun barely sets.',
+    title: _('Night Method'),
+    subtitle: _('How to determine Fajr/Isha when the sun barely sets.'),
   });
   const highLatModel = Gtk.StringList.new(HIGH_LAT_LABELS);
   highLatRow.set_model(highLatModel);
@@ -217,8 +219,8 @@ export function buildPrayerPage(settings) {
   //  Per-prayer manual offsets
   // ----------------------------------------------------------------
   const offsetGroup = new Adw.PreferencesGroup({
-    title: 'Time Adjustments',
-    description: 'Fine-tune individual prayer times if your local mosque differs slightly.',
+    title: _('Time Adjustments'),
+    description: _('Fine-tune individual prayer times if your local mosque differs slightly.'),
   });
   page.add(offsetGroup);
 
@@ -238,8 +240,8 @@ export function buildPrayerPage(settings) {
     });
 
     const row = new Adw.ActionRow({
-      title: `${name} Offset`,
-      subtitle: 'Minutes (positive = later, negative = earlier)',
+      title: _(`${name} Offset`),
+      subtitle: _('Minutes (positive = later, negative = earlier)'),
     });
     row.add_suffix(spin);
     row.activatable_widget = spin;

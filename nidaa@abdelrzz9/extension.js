@@ -113,12 +113,14 @@ export default class NidaaExtension extends Extension {
     }
 
     // --- Scheduler ---
+    this._onEvent = (event) => {
+      showNotification(event);
+      // Refresh quran popup so page count stays current
+      if (this._quranSection) this._quranSection.update();
+    };
+
     this._scheduler = new Scheduler({
-      onEvent: (event) => {
-        showNotification(event);
-        // Refresh quran popup so page count stays current
-        if (this._quranSection) this._quranSection.update();
-      },
+      onEvent: this._onEvent,
     });
     this._scheduler.enable();
 
@@ -348,6 +350,7 @@ export default class NidaaExtension extends Extension {
     const provider = createPrayerProvider({
       location,
       settings: this._settings,
+      onEvent: this._onEvent,
     });
 
     this._providerUnsub = this._scheduler.addProvider(provider);

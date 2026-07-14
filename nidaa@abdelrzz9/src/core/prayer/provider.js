@@ -22,6 +22,8 @@
  * Zero GNOME Shell dependencies — pure ESM, testable standalone via GJS.
  */
 
+import { _bool, _int, _string, localTimezoneOffset, METHODS_BY_IDX, HIGH_LAT_RULES } from '../settings-helpers.js';
+import GLib from 'gi://GLib';
 import { calculatePrayerTimes } from './times.js';
 import { getMethodParams } from './methods.js';
 import { createEvent } from '../scheduler/event.js';
@@ -77,59 +79,6 @@ const IQAMAH_PRIORITY = 5;
 const ENDING_SOON_PRIORITY = 3;
 
 // ------------------------------------------------------------------
-//  GSettings key helpers
-// ------------------------------------------------------------------
-
-/** Read a boolean key; returns fallback on error. */
-function _bool(settings, key, fallback) {
-  try {
-    return settings ? settings.get_boolean(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-/** Read an integer key; returns fallback on error. */
-function _int(settings, key, fallback) {
-  try {
-    return settings ? settings.get_int(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-/** Read a string key; returns fallback on error. */
-function _string(settings, key, fallback) {
-  try {
-    return settings ? settings.get_string(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-// ------------------------------------------------------------------
-//  Timezone helper
-// ------------------------------------------------------------------
-
-/**
- * Compute the local UTC offset in hours using pure JavaScript.
- * Avoids the GLib.DateTime.get_utc_offset() issue where the return
- * value may be in microseconds (GTimeSpan) depending on the GJS version.
- *
- * @returns {number} UTC offset in hours (e.g., 1 for UTC+1, -5 for UTC-5)
- */
-function localTimezoneOffset() {
-  const now = new Date();
-  const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-  const localMinutes = now.getHours() * 60 + now.getMinutes();
-  let diff = (localMinutes - utcMinutes) / 60;
-  // Handle day boundary wrap
-  if (diff > 12) diff -= 24;
-  if (diff < -12) diff += 24;
-  return diff;
-}
-
-// ------------------------------------------------------------------
 //  Provider factory
 // ------------------------------------------------------------------
 
@@ -142,13 +91,45 @@ function localTimezoneOffset() {
  * @param {Function} [opts.now] - Injectable clock returning Date (for testing)
  * @returns {(date: Date) => Event[]} Provider function
  */
-export function createPrayerProvider({ location, settings, now: injectableNow }) {
+export function createPrayerProvider({ location, settings, now: injectableNow, onEvent }) {
   if (!location) {
     console.warn(`${LOG_PREFIX} no location — provider will return empty arrays`);
     return () => [];
   }
 
   const tzHours = localTimezoneOffset();
+
+  function _makeEvent({ name, prayer, ref, time }) {
+    return createEvent({
+      id: `prayer-${prayer}-${time.getTime()}`,
+      type: 'prayer',
+      title: `${name} — Adhan`,
+      description: ref,
+      time,
+      priority: ADHAN_PRIORITY,
+      icon: 'alarm-symbolic',
+      sound: _string(settings, `prayer-sound-${prayer}`, '') || null,
+      actions: [
+        {
+          label: _('Snooze'),
+          callback: () => {
+            const snoozeMin = _int(settings, 'prayer-snooze-duration', 10);
+            GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, snoozeMin * 60, () => {
+              if (onEvent) {
+                onEvent(_makeEvent({ name, prayer, ref, time: new Date() }));
+              }
+              return GLib.SOURCE_REMOVE;
+            });
+          },
+        },
+        {
+          label: _('Mark as Prayed'),
+          callback: () =>
+            console.log(`${LOG_PREFIX} ${name} marked as prayed`),
+        },
+      ],
+    });
+  }
 
   return function prayerProvider(date) {
     const _now = injectableNow ? injectableNow() : new Date();
@@ -168,14 +149,12 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
 
     // --- Resolve calculation method from settings ---
     const methodIdx = _int(settings, 'prayer-method', 0);
-    const METHODS_BY_IDX = ['MWL', 'ISNA', 'Egypt', 'UmmAlQura', 'Karachi', 'Tehran', 'Jafari', 'Custom'];
     const methodId = METHODS_BY_IDX[methodIdx] || 'MWL';
 
     const asrIdx = _int(settings, 'asr-method', 0);
     const madhab = asrIdx === 1 ? 'Hanafi' : 'Shafii';
 
     const highLatIdx = _int(settings, 'high-latitude-method', 3);
-    const HIGH_LAT_RULES = ['None', 'MiddleOfNight', 'OneSeventh', 'AngleBased'];
     const highLatitudeRule = HIGH_LAT_RULES[highLatIdx] || 'AngleBased';
 
     // --- Calculate prayer times for the requested day ---
@@ -219,32 +198,7 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
       const ref = QURAN_REFS[prayer];
 
       events.push(
-        createEvent({
-          id: `prayer-${prayer}-${date.getTime()}`,
-          type: 'prayer',
-          title: `${name} — Adhan`,
-          description: ref,
-          time: adjustedTime,
-          priority: ADHAN_PRIORITY,
-          icon: 'alarm-symbolic',
-          sound: _string(settings, `prayer-sound-${prayer}`, '') || null,
-          actions: [
-            {
-              label: _('Snooze'),
-              callback: () =>
-                console.log(
-                  `${LOG_PREFIX} snooze requested for ${name}`
-                ),
-            },
-            {
-              label: _('Mark as Prayed'),
-              callback: () =>
-                console.log(
-                  `${LOG_PREFIX} ${name} marked as prayed`
-                ),
-            },
-          ],
-        })
+        _makeEvent({ name, prayer, ref, time: adjustedTime })
       );
 
       // --- Iqamah reminder (offset minutes after adhan) ---

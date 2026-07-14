@@ -12,24 +12,26 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Ramadan]';
 
 export function buildRamadanPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Ramadan',
+    title: _('Ramadan'),
     icon_name: 'weather-clear-night-symbolic',
   });
 
   // General
   const generalGroup = new Adw.PreferencesGroup({
-    title: 'Ramadan Mode',
-    description: 'Configure Ramadan-specific features. Ramadan mode activates automatically when the Hijri month is Ramadan (9).',
+    title: _('Ramadan Mode'),
+    description: _('Configure Ramadan-specific features. Ramadan mode activates automatically when the Hijri month is Ramadan (9).'),
   });
   page.add(generalGroup);
 
   const enabledRow = new Adw.SwitchRow({
-    title: 'Ramadan Mode',
-    subtitle: 'Active when Hijri month is Ramadan (9).',
+    title: _('Ramadan Mode'),
+    subtitle: _('Active when Hijri month is Ramadan (9).'),
   });
   enabledRow.set_active(settings.get_boolean('ramadan-enabled'));
   enabledRow.connect('notify::active', (_row) => {
@@ -39,8 +41,8 @@ export function buildRamadanPage(settings) {
   generalGroup.add(enabledRow);
 
   const forceRow = new Adw.SwitchRow({
-    title: 'Force Ramadan Mode',
-    subtitle: 'Override for testing — forces Ramadan display even when not month 9.',
+    title: _('Force Ramadan Mode'),
+    subtitle: _('Override for testing — forces Ramadan display even when not month 9.'),
   });
   forceRow.set_active(settings.get_boolean('force-ramadan'));
   forceRow.connect('notify::active', (_row) => {
@@ -50,14 +52,14 @@ export function buildRamadanPage(settings) {
 
   // Taraweeh
   const taraweehGroup = new Adw.PreferencesGroup({
-    title: 'Taraweeh Prayer',
-    description: 'Configure the Taraweeh reminder after Isha.',
+    title: _('Taraweeh Prayer'),
+    description: _('Configure the Taraweeh reminder after Isha.'),
   });
   page.add(taraweehGroup);
 
   const taraweehEnabledRow = new Adw.SwitchRow({
-    title: 'Enable Taraweeh Reminder',
-    subtitle: 'Reminder after Isha during Ramadan.',
+    title: _('Enable Taraweeh Reminder'),
+    subtitle: _('Reminder after Isha during Ramadan.'),
   });
   taraweehEnabledRow.set_active(settings.get_boolean('ramadan-taraweeh-enabled'));
   taraweehEnabledRow.connect('notify::active', (_row) => {
@@ -79,8 +81,8 @@ export function buildRamadanPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const taraweehOffsetRow = new Adw.ActionRow({
-    title: 'Taraweeh Offset (min)',
-    subtitle: 'Minutes after Isha to send the Taraweeh reminder.',
+    title: _('Taraweeh Offset (min)'),
+    subtitle: _('Minutes after Isha to send the Taraweeh reminder.'),
   });
   taraweehOffsetRow.add_suffix(taraweehOffsetSpin);
   taraweehOffsetRow.activatable_widget = taraweehOffsetSpin;
@@ -91,14 +93,14 @@ export function buildRamadanPage(settings) {
 
   // Laylat al-Qadr
   const qadrGroup = new Adw.PreferencesGroup({
-    title: 'Laylat al-Qadr',
-    description: 'Special reminders on the last ten nights of Ramadan.',
+    title: _('Laylat al-Qadr'),
+    description: _('Special reminders on the last ten nights of Ramadan.'),
   });
   page.add(qadrGroup);
 
   const qadrRow = new Adw.SwitchRow({
-    title: 'Enable Laylat al-Qadr',
-    subtitle: 'Special reminder on the odd nights of the last ten days of Ramadan.',
+    title: _('Enable Laylat al-Qadr'),
+    subtitle: _('Special reminder on the odd nights of the last ten days of Ramadan.'),
   });
   qadrRow.set_active(settings.get_boolean('ramadan-laylat-qadr-enabled'));
   qadrRow.connect('notify::active', (_row) => {
@@ -108,14 +110,14 @@ export function buildRamadanPage(settings) {
 
   // Daily dua
   const duaGroup = new Adw.PreferencesGroup({
-    title: 'Daily Ramadan Dua',
-    description: 'Show a daily dua during Ramadan.',
+    title: _('Daily Ramadan Dua'),
+    description: _('Show a daily dua during Ramadan.'),
   });
   page.add(duaGroup);
 
   const duaRow = new Adw.SwitchRow({
-    title: 'Daily Ramadan Dua',
-    subtitle: 'Show a daily dua during Ramadan.',
+    title: _('Daily Ramadan Dua'),
+    subtitle: _('Show a daily dua during Ramadan.'),
   });
   duaRow.set_active(settings.get_boolean('ramadan-daily-dua-enabled'));
   duaRow.connect('notify::active', (_row) => {

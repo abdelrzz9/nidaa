@@ -12,7 +12,8 @@
     "51",
     "52"
   ],
-  "version": 1,
+  "version": 2,
+  "version-name": "1.0.0",
   "url": "https://github.com/abdelrzz9/nidaa",
   "gettext-domain": "nidaa",
   "session-modes": ["user", "unlock-dialog"]

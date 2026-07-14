@@ -22,9 +22,11 @@ import Clutter from 'gi://Clutter';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
+import { localTimezoneOffset, METHODS_BY_IDX, HIGH_LAT_RULES } from '../../core/settings-helpers.js';
 import { calculatePrayerTimes, getMethodParams } from '../../core/prayer/index.js';
-import { PrayerPopupSection } from '../popup/index.js';
+import { PrayerPopupSection, AdhkarPopupSection } from '../popup/index.js';
 import { _ } from '../../core/i18n/index.js';
+import { isRamadan, getSuhoorCountdown, getIftarCountdown, getDailyDua } from '../../core/ramadan/index.js';
 
 const LOG_PREFIX = '[Nidaa:Indicator]';
 
@@ -44,21 +46,6 @@ function countdownText(prayerName, minutesLeft) {
   return m > 0
     ? `${prayerName} ${_('in')} ${h}${_('h')} ${m}${_('min')}`
     : `${prayerName} ${_('in')} ${h}${_('h')}`;
-}
-
-/**
- * Compute the local UTC offset in hours using pure JavaScript.
- * Avoids the GLib.DateTime.get_utc_offset() issue where the return
- * value may be in microseconds (GTimeSpan) depending on the GJS version.
- */
-function localTimezoneOffset() {
-  const now = new Date();
-  const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-  const localMinutes = now.getHours() * 60 + now.getMinutes();
-  let diff = (localMinutes - utcMinutes) / 60;
-  if (diff > 12) diff -= 24;
-  if (diff < -12) diff += 24;
-  return diff;
 }
 
 export class PrayerIndicator extends PanelMenu.Button {
@@ -101,6 +88,12 @@ export class PrayerIndicator extends PanelMenu.Button {
     this._popupItem.add_child(this._popupSection.actor);
     this.menu.addMenuItem(this._popupItem);
 
+    // ---- Adhkar section ----
+    this._adhkarSection = new AdhkarPopupSection(this._settings);
+    this._adhkarItem = new PopupMenu.PopupBaseMenuItem({ reactive: false });
+    this._adhkarItem.add_child(this._adhkarSection.actor);
+    this.menu.addMenuItem(this._adhkarItem);
+
     // ---- Initial computation ----
     this._refresh();
     this._scheduleTick();
@@ -114,8 +107,7 @@ export class PrayerIndicator extends PanelMenu.Button {
   _getCalcMethod() {
     if (!this._settings) return 'MWL';
     const idx = this._settings.get_int('prayer-method');
-    const methods = ['MWL', 'ISNA', 'Egypt', 'UmmAlQura', 'Karachi', 'Tehran', 'Jafari', 'Custom'];
-    return methods[idx] || 'MWL';
+    return METHODS_BY_IDX[idx] || 'MWL';
   }
 
   _getMadhab() {
@@ -125,8 +117,7 @@ export class PrayerIndicator extends PanelMenu.Button {
 
   _getHighLatRule() {
     if (!this._settings) return 'AngleBased';
-    const rules = ['None', 'MiddleOfNight', 'OneSeventh', 'AngleBased'];
-    return rules[this._settings.get_int('high-latitude-method')] || 'AngleBased';
+    return HIGH_LAT_RULES[this._settings.get_int('high-latitude-method')] || 'AngleBased';
   }
 
   _getCustomAngles() {
@@ -171,18 +162,28 @@ export class PrayerIndicator extends PanelMenu.Button {
     const tzHours = localTimezoneOffset();
 
     // --- Panel label: next prayer countdown ---
-    this._label.set_text(this._nextPrayerText(now));
+    this._label.set_text(this._nextPrayerText(now, tzHours));
 
     // --- Popup: full list ---
     this._popupSection.update(this._prayerTimes, tzHours, now);
+
+    // --- Adhkar status ---
+    this._adhkarSection.update();
   }
 
   /**
    * Find the upcoming prayer and return a human-readable countdown.
    * @returns {string}
    */
-  _nextPrayerText(now) {
+  _nextPrayerText(now, tzHours) {
     if (!this._prayerTimes) return _('Resolving location…');
+
+    if (isRamadan(now)) {
+      const suhoor = getSuhoorCountdown(this._prayerTimes, tzHours, now);
+      if (suhoor) return suhoor;
+      const iftar = getIftarCountdown(this._prayerTimes, tzHours, now);
+      if (iftar) return iftar;
+    }
 
     const prayers = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
     for (const key of prayers) {
@@ -275,6 +276,12 @@ export class PrayerIndicator extends PanelMenu.Button {
     this._popupSection.destroy();
     this._popupSection = null;
     this._popupItem = null;
+
+    if (this._adhkarSection) {
+      this._adhkarSection.destroy();
+      this._adhkarSection = null;
+    }
+    this._adhkarItem = null;
 
     super.destroy();
   }

@@ -11,13 +11,15 @@ import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Settings]';
 
 const LANG_LABELS = [
-  'System Default (English)',
-  'Arabic',
-  'English',
-  'French',
+  _('System Default (English)'),
+  _('Arabic'),
+  _('English'),
+  _('French'),
 ];
 
 const LANG_KEYS = ['en', 'ar', 'en', 'fr'];
@@ -27,20 +29,20 @@ const SETTINGS_VERSION = 1;
 
 export function buildSettingsPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Settings',
+    title: _('Settings'),
     icon_name: 'emblem-system-symbolic',
   });
 
   // Language override
   const langGroup = new Adw.PreferencesGroup({
-    title: 'Language',
-    description: 'Override the system locale for Nidaa UI strings.',
+    title: _('Language'),
+    description: _('Override the system locale for Nidaa UI strings.'),
   });
   page.add(langGroup);
 
   const langRow = new Adw.ComboRow({
-    title: 'Override',
-    subtitle: 'Override system locale for Nidaa UI strings.',
+    title: _('Override'),
+    subtitle: _('Override system locale for Nidaa UI strings.'),
   });
   const langModel = Gtk.StringList.new(LANG_LABELS);
   langRow.set_model(langModel);
@@ -55,14 +57,14 @@ export function buildSettingsPage(settings) {
 
   // Import / Export
   const ioGroup = new Adw.PreferencesGroup({
-    title: 'Settings Import / Export',
-    description: 'Back up your settings or restore from a previous export.',
+    title: _('Settings Import / Export'),
+    description: _('Back up your settings or restore from a previous export.'),
   });
   page.add(ioGroup);
 
   const exportRow = new Adw.ActionRow({
-    title: 'Export Settings',
-    subtitle: 'Export extension settings to a JSON file.',
+    title: _('Export Settings'),
+    subtitle: _('Export extension settings to a JSON file.'),
     activatable: true,
   });
   const exportIcon = new Gtk.Image({
@@ -76,8 +78,8 @@ export function buildSettingsPage(settings) {
   ioGroup.add(exportRow);
 
   const importRow = new Adw.ActionRow({
-    title: 'Import Settings',
-    subtitle: 'Import extension settings from a JSON file.',
+    title: _('Import Settings'),
+    subtitle: _('Import extension settings from a JSON file.'),
     activatable: true,
   });
   const importIcon = new Gtk.Image({
@@ -103,7 +105,7 @@ function _langIndex(lang) {
 function _exportSettings(settings) {
   try {
     const dialog = new Gtk.FileDialog({
-      title: 'Export Nidaa Settings',
+      title: _('Export Nidaa Settings'),
       initial_name: 'nidaa-settings.json',
     });
 
@@ -150,11 +152,11 @@ function _exportSettings(settings) {
 function _importSettings(settings) {
   try {
     const dialog = new Gtk.FileDialog({
-      title: 'Import Nidaa Settings',
+      title: _('Import Nidaa Settings'),
     });
 
     const filter = new Gtk.FileFilter();
-    filter.set_name('JSON files');
+    filter.set_name(_('JSON files'));
     filter.add_pattern('*.json');
     const filters = Gio.ListStore.new(Gtk.FileFilter);
     filters.append(filter);

@@ -14,20 +14,22 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Adhkar]';
 
 const LANGUAGE_LABELS = [
-  'Arabic',
-  'English',
-  'French',
+  _('Arabic'),
+  _('English'),
+  _('French'),
 ];
 
 const POST_PRAYER_PRAYERS = [
-  { name: 'Fajr', key: 'adhkar-post-fajr' },
-  { name: 'Dhuhr', key: 'adhkar-post-dhuhr' },
-  { name: 'Asr', key: 'adhkar-post-asr' },
-  { name: 'Maghrib', key: 'adhkar-post-maghrib' },
-  { name: 'Isha', key: 'adhkar-post-isha' },
+  { name: _('Fajr'), key: 'adhkar-post-fajr' },
+  { name: _('Dhuhr'), key: 'adhkar-post-dhuhr' },
+  { name: _('Asr'), key: 'adhkar-post-asr' },
+  { name: _('Maghrib'), key: 'adhkar-post-maghrib' },
+  { name: _('Isha'), key: 'adhkar-post-isha' },
 ];
 
 /**
@@ -38,7 +40,7 @@ const POST_PRAYER_PRAYERS = [
  */
 export function buildAdhkarPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Adhkar',
+    title: _('Adhkar'),
     icon_name: 'preferences-other-symbolic',
   });
 
@@ -46,15 +48,15 @@ export function buildAdhkarPage(settings) {
   //  General settings
   // ----------------------------------------------------------------
   const generalGroup = new Adw.PreferencesGroup({
-    title: 'General',
-    description: 'Enable or disable adhkar notifications and choose the display language.',
+    title: _('General'),
+    description: _('Enable or disable adhkar notifications and choose the display language.'),
   });
   page.add(generalGroup);
 
   // --- Master toggle ---
   const enabledRow = new Adw.SwitchRow({
-    title: 'Enable Adhkar',
-    subtitle: 'Show reminders for morning, evening, and post-prayer adhkar.',
+    title: _('Enable Adhkar'),
+    subtitle: _('Show reminders for morning, evening, and post-prayer adhkar.'),
   });
   enabledRow.set_active(settings.get_boolean('adhkar-enabled'));
   enabledRow.connect('notify::active', (_row) => {
@@ -65,8 +67,8 @@ export function buildAdhkarPage(settings) {
 
   // --- Language dropdown ---
   const langRow = new Adw.ComboRow({
-    title: 'Language',
-    subtitle: 'Choose the language for adhkar text.',
+    title: _('Language'),
+    subtitle: _('Choose the language for adhkar text.'),
   });
   const langModel = Gtk.StringList.new(LANGUAGE_LABELS);
   langRow.set_model(langModel);
@@ -82,8 +84,8 @@ export function buildAdhkarPage(settings) {
   //  Timing offsets
   // ----------------------------------------------------------------
   const timingGroup = new Adw.PreferencesGroup({
-    title: 'Timing',
-    description: 'Adjust when adhkar notifications are sent relative to prayer times.',
+    title: _('Timing'),
+    description: _('Adjust when adhkar notifications are sent relative to prayer times.'),
   });
   page.add(timingGroup);
 
@@ -101,8 +103,8 @@ export function buildAdhkarPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const morningRow = new Adw.ActionRow({
-    title: 'Morning Adhkar Offset',
-    subtitle: 'Minutes after sunrise to send the reminder.',
+    title: _('Morning Adhkar Offset'),
+    subtitle: _('Minutes after sunrise to send the reminder.'),
   });
   morningRow.add_suffix(morningSpin);
   morningRow.activatable_widget = morningSpin;
@@ -125,8 +127,8 @@ export function buildAdhkarPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const eveningRow = new Adw.ActionRow({
-    title: 'Evening Adhkar Offset',
-    subtitle: 'Minutes before Maghrib to send the reminder.',
+    title: _('Evening Adhkar Offset'),
+    subtitle: _('Minutes before Maghrib to send the reminder.'),
   });
   eveningRow.add_suffix(eveningSpin);
   eveningRow.activatable_widget = eveningSpin;
@@ -149,8 +151,8 @@ export function buildAdhkarPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const postPrayerRow = new Adw.ActionRow({
-    title: 'Post-Prayer Offset',
-    subtitle: 'Minutes after the Iqamah reminder to send the post-prayer adhkar.',
+    title: _('Post-Prayer Offset'),
+    subtitle: _('Minutes after the Iqamah reminder to send the post-prayer adhkar.'),
   });
   postPrayerRow.add_suffix(postPrayerSpin);
   postPrayerRow.activatable_widget = postPrayerSpin;
@@ -163,15 +165,15 @@ export function buildAdhkarPage(settings) {
   //  Per-prayer toggles
   // ----------------------------------------------------------------
   const perPrayerGroup = new Adw.PreferencesGroup({
-    title: 'Per-Prayer Adhkar',
-    description: 'Choose which prayers trigger a post-prayer adhkar reminder.',
+    title: _('Per-Prayer Adhkar'),
+    description: _('Choose which prayers trigger a post-prayer adhkar reminder.'),
   });
   page.add(perPrayerGroup);
 
   for (const { name, key } of POST_PRAYER_PRAYERS) {
     const row = new Adw.SwitchRow({
-      title: `After ${name}`,
-      subtitle: `Show adhkar reminder after ${name} prayer.`,
+      title: _(`After ${name}`),
+      subtitle: _(`Show adhkar reminder after ${name} prayer.`),
     });
     row.set_active(settings.get_boolean(key));
     row.connect('notify::active', (_row) => {

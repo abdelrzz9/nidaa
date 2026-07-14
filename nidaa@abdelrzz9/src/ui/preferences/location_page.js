@@ -18,6 +18,8 @@ import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
+import { _ } from '../../core/i18n/index.js';
+
 const LOG_PREFIX = '[Nidaa:Prefs:Location]';
 
 /**
@@ -25,9 +27,9 @@ const LOG_PREFIX = '[Nidaa:Prefs:Location]';
  * Order matches the index used by the ComboRow.
  */
 const MODE_LABELS = [
-  'Automatic (Geoclue + IP)',
-  'Search city',
-  'Enter coordinates manually',
+  _('Automatic (Geoclue + IP)'),
+  _('Search city'),
+  _('Enter coordinates manually'),
 ];
 
 /** GSettings string values for each mode. */
@@ -41,7 +43,7 @@ const MODE_KEYS = ['auto', 'city', 'manual'];
  */
 export function buildLocationPage(settings) {
   const page = new Adw.PreferencesPage({
-    title: 'Location',
+    title: _('Location'),
     icon_name: 'find-location-symbolic',
   });
 
@@ -52,13 +54,13 @@ export function buildLocationPage(settings) {
   //  Current location display
   // ----------------------------------------------------------------
   const statusGroup = new Adw.PreferencesGroup({
-    title: 'Current Location',
+    title: _('Current Location'),
   });
   page.add(statusGroup);
 
   const statusRow = new Adw.ActionRow({
-    title: 'Resolving location...',
-    subtitle: 'Waiting for first fix.',
+    title: _('Resolving location...'),
+    subtitle: _('Waiting for first fix.'),
   });
   // Icon at the start
   const statusIcon = new Gtk.Image({
@@ -74,14 +76,14 @@ export function buildLocationPage(settings) {
   //  Location mode
   // ----------------------------------------------------------------
   const modeGroup = new Adw.PreferencesGroup({
-    title: 'Location Source',
-    description: 'How Nidaa determines your position for prayer times.',
+    title: _('Location Source'),
+    description: _('How Nidaa determines your position for prayer times.'),
   });
   page.add(modeGroup);
 
   const modeRow = new Adw.ComboRow({
-    title: 'Location Mode',
-    subtitle: 'Automatic uses Geoclue with IP fallback.',
+    title: _('Location Mode'),
+    subtitle: _('Automatic uses Geoclue with IP fallback.'),
   });
   const modeModel = Gtk.StringList.new(MODE_LABELS);
   modeRow.set_model(modeModel);
@@ -98,8 +100,8 @@ export function buildLocationPage(settings) {
   //  Manual coordinates
   // ----------------------------------------------------------------
   const manualGroup = new Adw.PreferencesGroup({
-    title: 'Manual Coordinates',
-    description: 'Enter latitude and longitude in decimal degrees.',
+    title: _('Manual Coordinates'),
+    description: _('Enter latitude and longitude in decimal degrees.'),
   });
   page.add(manualGroup);
 
@@ -118,8 +120,8 @@ export function buildLocationPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const latRow = new Adw.ActionRow({
-    title: 'Latitude',
-    subtitle: 'North is positive, South is negative (-90 to 90).',
+    title: _('Latitude'),
+    subtitle: _('North is positive, South is negative (-90 to 90).'),
   });
   latRow.add_suffix(latSpin);
   latRow.activatable_widget = latSpin;
@@ -145,8 +147,8 @@ export function buildLocationPage(settings) {
     valign: Gtk.Align.CENTER,
   });
   const lngRow = new Adw.ActionRow({
-    title: 'Longitude',
-    subtitle: 'East is positive, West is negative (-180 to 180).',
+    title: _('Longitude'),
+    subtitle: _('East is positive, West is negative (-180 to 180).'),
   });
   lngRow.add_suffix(lngSpin);
   lngRow.activatable_widget = lngSpin;
@@ -161,14 +163,14 @@ export function buildLocationPage(settings) {
   //  City search
   // ----------------------------------------------------------------
   const cityGroup = new Adw.PreferencesGroup({
-    title: 'City Search',
-    description: 'Select a city from the bundled database (offline).',
+    title: _('City Search'),
+    description: _('Select a city from the bundled database (offline).'),
   });
   page.add(cityGroup);
 
   // Search entry
   const searchEntry = new Gtk.SearchEntry({
-    placeholder_text: 'Search cities...',
+    placeholder_text: _('Search cities...'),
     hexpand: true,
   });
   const searchRow = new Adw.ActionRow();
@@ -348,16 +350,16 @@ function _updateStatusDisplay(settings, statusRow) {
   const mode = settings.get_string('location-mode');
 
   if (mode === 'auto') {
-    statusRow.set_title('Automatic');
-    statusRow.set_subtitle('Using Geoclue with IP fallback. Location is resolved at startup.');
+    statusRow.set_title(_('Automatic'));
+    statusRow.set_subtitle(_('Using Geoclue with IP fallback. Location is resolved at startup.'));
   } else {
     const lat = settings.get_double('manual-latitude');
     const lng = settings.get_double('manual-longitude');
     const cityName = settings.get_string('manual-city-name');
 
     if (lat === 0 && lng === 0) {
-      statusRow.set_title('No location set');
-      statusRow.set_subtitle('Enter coordinates or select a city.');
+      statusRow.set_title(_('No location set'));
+      statusRow.set_subtitle(_('Enter coordinates or select a city.'));
       return;
     }
 
@@ -366,11 +368,11 @@ function _updateStatusDisplay(settings, statusRow) {
     const coordStr = `${Math.abs(lat).toFixed(2)}°${latDir}, ${Math.abs(lng).toFixed(2)}°${lngDir}`;
 
     if (mode === 'city' && cityName) {
-      statusRow.set_title(`Using: ${coordStr}`);
+      statusRow.set_title(_(`Using: ${coordStr}`));
       statusRow.set_subtitle(`${cityName}`);
     } else {
-      statusRow.set_title(`Using: ${coordStr}`);
-      statusRow.set_subtitle(`Mode: ${mode === 'manual' ? 'Manual entry' : 'Automatic'}`);
+      statusRow.set_title(_(`Using: ${coordStr}`));
+      statusRow.set_subtitle(_(`Mode: ${mode === 'manual' ? 'Manual entry' : 'Automatic'}`));
     }
   }
 }

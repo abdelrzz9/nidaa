@@ -17,6 +17,7 @@
  * Zero GNOME Shell dependencies — pure ESM, testable via GJS.
  */
 
+import { _bool, _int, _string, localTimezoneOffset, METHODS_BY_IDX, HIGH_LAT_RULES } from '../settings-helpers.js';
 import { calculatePrayerTimes } from '../prayer/times.js';
 import { getMethodParams } from '../prayer/methods.js';
 import { createEvent } from '../scheduler/event.js';
@@ -33,48 +34,6 @@ const QURAN_PRIORITY = 2;
 
 const NOTIFICATION_TITLE = _('Quran Reading');
 const NOTIFICATION_BODY = _('📖 Have you read Quran today?\nEven one page is progress.');
-
-// ------------------------------------------------------------------
-//  GSettings helpers (same pattern as prayer/adhkar providers)
-// ------------------------------------------------------------------
-
-function _bool(settings, key, fallback) {
-  try {
-    return settings ? settings.get_boolean(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function _int(settings, key, fallback) {
-  try {
-    return settings ? settings.get_int(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function _string(settings, key, fallback) {
-  try {
-    return settings ? settings.get_string(key) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-// ------------------------------------------------------------------
-//  Timezone helper
-// ------------------------------------------------------------------
-
-function localTimezoneOffset() {
-  const now = new Date();
-  const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-  const localMinutes = now.getHours() * 60 + now.getMinutes();
-  let diff = (localMinutes - utcMinutes) / 60;
-  if (diff > 12) diff -= 24;
-  if (diff < -12) diff += 24;
-  return diff;
-}
 
 // ------------------------------------------------------------------
 //  Deterministic hash for random scheduling
@@ -97,7 +56,6 @@ function _hashString(str) {
 // ------------------------------------------------------------------
 
 function _resolveMethod(settings) {
-  const METHODS_BY_IDX = ['MWL', 'ISNA', 'Egypt', 'UmmAlQura', 'Karachi', 'Tehran', 'Jafari', 'Custom'];
   const idx = _int(settings, 'prayer-method', 0);
   return METHODS_BY_IDX[idx] || 'MWL';
 }
@@ -108,9 +66,8 @@ function _resolveMadhab(settings) {
 }
 
 function _resolveHighLat(settings) {
-  const RULES = ['None', 'MiddleOfNight', 'OneSeventh', 'AngleBased'];
   const idx = _int(settings, 'high-latitude-method', 3);
-  return RULES[idx] || 'AngleBased';
+  return HIGH_LAT_RULES[idx] || 'AngleBased';
 }
 
 function _calcPrayerTime(times, settings, location, date, prayer) {
