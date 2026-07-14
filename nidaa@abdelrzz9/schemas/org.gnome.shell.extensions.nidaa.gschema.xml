@@ -295,5 +295,109 @@
       <summary>Kaaba longitude for Qibla calculation</summary>
     </key>
 
+    <!-- ======== Islamic Events ======== -->
+    <key name="events-friday-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Friday reminders</summary>
+      <description>Notifications for Thursday night, Friday morning, and Friday afternoon.</description>
+    </key>
+
+    <key name="events-friday-thursday-hour" type="i">
+      <default>21</default>
+      <summary>Thursday night reminder hour</summary>
+      <description>Hour of the Thursday night reminder (0-23).</description>
+    </key>
+
+    <key name="events-friday-morning-hour" type="i">
+      <default>8</default>
+      <summary>Friday morning reminder hour</summary>
+      <description>Hour of the Friday morning reminder (0-23).</description>
+    </key>
+
+    <key name="events-friday-afternoon-hour" type="i">
+      <default>14</default>
+      <summary>Friday afternoon reminder hour</summary>
+      <description>Hour of the Friday afternoon reminder (0-23).</description>
+    </key>
+
+    <key name="events-ashura-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Ashura reminder</summary>
+      <description>Reminder on Muharram 10 (Ashura).</description>
+    </key>
+
+    <key name="events-ashura-daybefore" type="b">
+      <default>true</default>
+      <summary>Ashura day-before reminder</summary>
+      <description>Show a heads-up the day before Ashura.</description>
+    </key>
+
+    <key name="events-arafah-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Arafah reminder</summary>
+      <description>Reminder on Dhul Hijjah 9 (Day of Arafah).</description>
+    </key>
+
+    <key name="events-arafah-daybefore" type="b">
+      <default>true</default>
+      <summary>Arafah day-before reminder</summary>
+      <description>Show a heads-up the day before Arafah.</description>
+    </key>
+
+    <key name="events-whitedays-enabled" type="b">
+      <default>true</default>
+      <summary>Enable White Days</summary>
+      <description>Reminder on the 13th-15th of each Hijri month.</description>
+    </key>
+
+    <!-- ======== Ramadan Mode ======== -->
+    <key name="ramadan-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Ramadan Mode</summary>
+      <description>Auto-activate Ramadan mode when Hijri month is 9.</description>
+    </key>
+
+    <key name="force-ramadan" type="b">
+      <default>false</default>
+      <summary>Force Ramadan Mode for testing</summary>
+      <description>Override: show Ramadan display even when not month 9.</description>
+    </key>
+
+    <key name="ramadan-taraweeh-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Taraweeh reminder</summary>
+      <description>Reminder after Isha during Ramadan.</description>
+    </key>
+
+    <key name="ramadan-taraweeh-offset" type="i">
+      <default>15</default>
+      <summary>Taraweeh reminder offset</summary>
+      <description>Minutes after Isha to send the Taraweeh reminder.</description>
+    </key>
+
+    <key name="ramadan-laylat-qadr-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Laylat al-Qadr reminders</summary>
+      <description>Special reminders on the odd nights of the last ten days.</description>
+    </key>
+
+    <key name="ramadan-daily-dua-enabled" type="b">
+      <default>true</default>
+      <summary>Enable daily Ramadan dua</summary>
+      <description>Show a daily dua during Ramadan.</description>
+    </key>
+
+    <!-- ======== i18n / Language ======== -->
+    <key name="ui-language" type="s">
+      <default>'en'</default>
+      <summary>UI language override</summary>
+      <description>
+        Override the system locale for Nidaa UI strings.
+        'en' (default) — use system locale.
+        'ar' — Arabic.
+        'fr' — French.
+      </description>
+    </key>
+
   </schema>
 </schemalist>
