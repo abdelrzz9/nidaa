@@ -189,7 +189,56 @@
     <!-- ======== Adhkar ======== -->
     <key name="adhkar-enabled" type="b">
       <default>true</default>
-      <summary>Enable daily adhkar reminders</summary>
+      <summary>Enable adhkar reminders</summary>
+    </key>
+
+    <key name="adhkar-language" type="s">
+      <default>'en'</default>
+      <summary>Translation language for adhkar</summary>
+      <description>'en' for English, 'fr' for French.</description>
+    </key>
+
+    <key name="adhkar-morning-offset" type="i">
+      <default>15</default>
+      <summary>Morning adhkar offset after sunrise</summary>
+      <description>Minutes after sunrise to fire the morning adhkar reminder. 0 = at sunrise.</description>
+    </key>
+
+    <key name="adhkar-evening-offset" type="i">
+      <default>15</default>
+      <summary>Evening adhkar offset before Maghrib</summary>
+      <description>Minutes before Maghrib to fire the evening adhkar reminder. 0 = at Maghrib.</description>
+    </key>
+
+    <key name="adhkar-post-prayer-offset" type="i">
+      <default>30</default>
+      <summary>Post-prayer adhkar offset</summary>
+      <description>Minutes after each prayer to fire the post-prayer adhkar reminder. 0 = immediately after prayer time.</description>
+    </key>
+
+    <key name="adhkar-post-fajr" type="b">
+      <default>true</default>
+      <summary>Post-prayer adhkar after Fajr</summary>
+    </key>
+
+    <key name="adhkar-post-dhuhr" type="b">
+      <default>true</default>
+      <summary>Post-prayer adhkar after Dhuhr</summary>
+    </key>
+
+    <key name="adhkar-post-asr" type="b">
+      <default>true</default>
+      <summary>Post-prayer adhkar after Asr</summary>
+    </key>
+
+    <key name="adhkar-post-maghrib" type="b">
+      <default>true</default>
+      <summary>Post-prayer adhkar after Maghrib</summary>
+    </key>
+
+    <key name="adhkar-post-isha" type="b">
+      <default>true</default>
+      <summary>Post-prayer adhkar after Isha</summary>
     </key>
 
     <!-- ======== Qibla ======== -->

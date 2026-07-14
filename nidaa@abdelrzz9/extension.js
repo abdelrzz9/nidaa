@@ -7,6 +7,7 @@ import { resolveLocation } from './src/core/location/index.js';
 import { PrayerIndicator } from './src/ui/indicator/index.js';
 import { Scheduler } from './src/core/scheduler/index.js';
 import { createPrayerProvider } from './src/core/prayer/index.js';
+import { createAdhkarProvider } from './src/core/adhkar/index.js';
 import { showNotification, destroyNotifications } from './src/core/notifications/index.js';
 
 const LOG_PREFIX = '[Nidaa]';
@@ -35,6 +36,17 @@ const CALC_SETTINGS_KEYS = [
   'notify-isha',
   'prayer-iqamah-reminder-offset',
   'prayer-ending-soon-offset',
+  // Adhkar settings (affect adhkar scheduling)
+  'adhkar-enabled',
+  'adhkar-language',
+  'adhkar-morning-offset',
+  'adhkar-evening-offset',
+  'adhkar-post-prayer-offset',
+  'adhkar-post-fajr',
+  'adhkar-post-dhuhr',
+  'adhkar-post-asr',
+  'adhkar-post-maghrib',
+  'adhkar-post-isha',
 ];
 
 /**
@@ -53,6 +65,7 @@ export default class NidaaExtension extends Extension {
     this._indicator = null;
     this._resolveAttempted = false;
     this._providerUnsub = null;
+    this._adhkarUnsub = null;
     this._signalIds = [];
     this._currentLocation = null;
 
@@ -84,6 +97,11 @@ export default class NidaaExtension extends Extension {
     if (this._providerUnsub) {
       this._providerUnsub();
       this._providerUnsub = null;
+    }
+
+    if (this._adhkarUnsub) {
+      this._adhkarUnsub();
+      this._adhkarUnsub = null;
     }
 
     destroyNotifications();
@@ -170,9 +188,10 @@ export default class NidaaExtension extends Extension {
   _onCalcSettingsChanged() {
     if (!this._scheduler) return;
 
-    // Re-register the provider with current location (it reads settings live)
+    // Re-register both providers with current location (they read settings live)
     if (this._currentLocation) {
       this._registerPrayerProvider(this._currentLocation);
+      this._registerAdhkarProvider(this._currentLocation);
     }
 
     this._scheduler.refresh();
@@ -219,6 +238,9 @@ export default class NidaaExtension extends Extension {
         // Register the real prayer provider with the scheduler
         this._registerPrayerProvider(location);
 
+        // Register the adhkar provider
+        this._registerAdhkarProvider(location);
+
         // Tell the scheduler to re-fetch events
         if (this._scheduler) this._scheduler.refresh();
       } else {
@@ -246,6 +268,25 @@ export default class NidaaExtension extends Extension {
 
     this._providerUnsub = this._scheduler.addProvider(provider);
     console.log(`${LOG_PREFIX} prayer provider registered`);
+  }
+
+  /**
+   * Register the adhkar event provider with the scheduler.
+   * Unregisters any previous adhkar provider first.
+   */
+  _registerAdhkarProvider(location) {
+    if (this._adhkarUnsub) {
+      this._adhkarUnsub();
+      this._adhkarUnsub = null;
+    }
+
+    const provider = createAdhkarProvider({
+      location,
+      settings: this._settings,
+    });
+
+    this._adhkarUnsub = this._scheduler.addProvider(provider);
+    console.log(`${LOG_PREFIX} adhkar provider registered`);
   }
 
   /**
