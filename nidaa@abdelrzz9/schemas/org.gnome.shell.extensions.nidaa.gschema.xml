@@ -241,6 +241,49 @@
       <summary>Post-prayer adhkar after Isha</summary>
     </key>
 
+    <!-- ======== Quran Reading ======== -->
+    <key name="quran-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Quran reading reminders</summary>
+    </key>
+
+    <key name="quran-frequency" type="s">
+      <default>'daily'</default>
+      <summary>Quran reminder frequency</summary>
+      <description>
+        'daily' — once per day
+        'weekly' — once per week (Fridays)
+        'after-fajr' — after Fajr prayer
+        'after-isha' — after Isha prayer
+        'every-6h' — every 6 hours
+        'random' — random time within a user-set window
+      </description>
+    </key>
+
+    <key name="quran-daily-goal" type="i">
+      <default>5</default>
+      <summary>Daily page goal</summary>
+      <description>Number of Quran pages to aim for each day.</description>
+    </key>
+
+    <key name="quran-offset" type="i">
+      <default>30</default>
+      <summary>Offset after prayer for Quran reminder</summary>
+      <description>Minutes after Fajr/Isha to send the Quran reminder (only for after-fajr/after-isha frequencies).</description>
+    </key>
+
+    <key name="quran-window-start" type="i">
+      <default>8</default>
+      <summary>Random window start hour</summary>
+      <description>Start of the random reminder window (0-23). Only used when frequency is 'random'.</description>
+    </key>
+
+    <key name="quran-window-end" type="i">
+      <default>21</default>
+      <summary>Random window end hour</summary>
+      <description>End of the random reminder window (0-23). Only used when frequency is 'random'.</description>
+    </key>
+
     <!-- ======== Qibla ======== -->
     <key name="qibla-latitude" type="d">
       <default>21.4225</default>

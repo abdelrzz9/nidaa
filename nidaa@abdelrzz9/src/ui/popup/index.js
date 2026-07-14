@@ -10,11 +10,19 @@
  *     Maghrib   18:20
  *     Isha      19:45
  *
+ * Also exports QuranPopupSection showing daily reading progress:
+ *   📖 Quran
+ *   Today's Goal
+ *     2 / 5 Pages
+ *     [ +1 Page ]
+ *
  * Zero GNOME Shell UI imports — purely St widget construction.
  */
 
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
+
+import { readProgress, incrementPage } from '../../core/quran/store.js';
 
 const LOG_PREFIX = '[Nidaa:Popup]';
 
@@ -200,6 +208,108 @@ export class PrayerPopupSection {
       this.actor.add_child(row);
       this._rows.push(row);
     }
+  }
+
+  destroy() {
+    this._clear();
+    this.actor.destroy();
+    this.actor = null;
+  }
+}
+
+// ------------------------------------------------------------------
+//  Quran progress popup section
+// ------------------------------------------------------------------
+
+/**
+ * Displays daily Quran reading progress in the popup menu:
+ *
+ *   📖 Quran
+ *   Today's Goal
+ *     2 / 5 Pages
+ *     [ +1 Page ]
+ *
+ * Usage:
+ *   const quran = new QuranPopupSection();
+ *   menu.addMenuItem(quran);
+ *   quran.update();   // refreshes the display from the store
+ */
+export class QuranPopupSection {
+  constructor() {
+    /** @type {St.BoxLayout} */
+    this.actor = new St.BoxLayout({
+      style_class: 'nidaa-quran-popup',
+      vertical: true,
+      x_fill: true,
+    });
+
+    this._children = [];
+  }
+
+  _clear() {
+    for (const child of this._children) {
+      child.destroy();
+    }
+    this._children = [];
+  }
+
+  /**
+   * Refresh the display from the store.
+   * Call this after any event fires or after the user taps +1 Page.
+   */
+  update() {
+    this._clear();
+
+    const progress = readProgress();
+
+    // Section header
+    const header = new St.Label({
+      text: '📖 Quran',
+      style_class: 'nidaa-quran-header',
+    });
+    this.actor.add_child(header);
+    this._children.push(header);
+
+    // Goal label
+    const goalLabel = new St.Label({
+      text: "Today's Goal",
+      style_class: 'nidaa-quran-goal-label',
+    });
+    this.actor.add_child(goalLabel);
+    this._children.push(goalLabel);
+
+    // Progress row: "2 / 5 Pages" + button
+    const progressBox = new St.BoxLayout({
+      style_class: 'nidaa-quran-progress-box',
+      x_fill: true,
+      x_expand: true,
+    });
+
+    const pagesText = `${progress.pagesRead} / ${progress.dailyGoal} Pages`;
+    const pagesLabel = new St.Label({
+      text: pagesText,
+      style_class: 'nidaa-quran-pages',
+      y_align: Clutter.ActorAlign.CENTER,
+      x_expand: true,
+    });
+    progressBox.add_child(pagesLabel);
+
+    // +1 Page button
+    const plusButton = new St.Button({
+      label: '+1 Page',
+      style_class: 'nidaa-quran-button',
+      reactive: true,
+      track_hover: true,
+      y_align: Clutter.ActorAlign.CENTER,
+    });
+    plusButton.connect('clicked', () => {
+      incrementPage();
+      this.update(); // re-render with new count
+    });
+    progressBox.add_child(plusButton);
+
+    this.actor.add_child(progressBox);
+    this._children.push(progressBox);
   }
 
   destroy() {

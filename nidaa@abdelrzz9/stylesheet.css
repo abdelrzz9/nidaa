@@ -170,3 +170,38 @@
   min-width: 80px;
   x_align: center;
 }
+
+/* ── Quran popup section ─────────────────────────────────────────── */
+
+.nidaa-quran-popup {
+  padding: 8px 12px;
+  min-width: 220px;
+}
+
+.nidaa-quran-header {
+  font-size: 13px;
+  font-weight: bold;
+  padding: 4px 0;
+}
+
+.nidaa-quran-goal-label {
+  font-size: 11px;
+  opacity: 0.7;
+  padding: 2px 0;
+}
+
+.nidaa-quran-progress-box {
+  padding: 4px 0;
+  spacing: 8px;
+}
+
+.nidaa-quran-pages {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.nidaa-quran-button {
+  padding: 4px 12px;
+  font-size: 11px;
+  border-radius: 4px;
+}

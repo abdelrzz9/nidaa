@@ -2,13 +2,16 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
 import Extension from 'resource:///org/gnome/shell/extensions/extension.js';
+import { PopupMenu } from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { resolveLocation } from './src/core/location/index.js';
 import { PrayerIndicator } from './src/ui/indicator/index.js';
 import { Scheduler } from './src/core/scheduler/index.js';
 import { createPrayerProvider } from './src/core/prayer/index.js';
 import { createAdhkarProvider } from './src/core/adhkar/index.js';
+import { createQuranProvider } from './src/core/quran/provider.js';
 import { showNotification, destroyNotifications } from './src/core/notifications/index.js';
+import { QuranPopupSection } from './src/ui/popup/index.js';
 
 const LOG_PREFIX = '[Nidaa]';
 const SCHEMA_ID = 'org.gnome.shell.extensions.nidaa';
@@ -47,6 +50,13 @@ const CALC_SETTINGS_KEYS = [
   'adhkar-post-asr',
   'adhkar-post-maghrib',
   'adhkar-post-isha',
+  // Quran settings (affect quran scheduling)
+  'quran-enabled',
+  'quran-frequency',
+  'quran-daily-goal',
+  'quran-offset',
+  'quran-window-start',
+  'quran-window-end',
 ];
 
 /**
@@ -66,6 +76,8 @@ export default class NidaaExtension extends Extension {
     this._resolveAttempted = false;
     this._providerUnsub = null;
     this._adhkarUnsub = null;
+    this._quranUnsub = null;
+    this._quranSection = null;
     this._signalIds = [];
     this._currentLocation = null;
 
@@ -73,7 +85,13 @@ export default class NidaaExtension extends Extension {
     this._settings = this._loadSettings();
 
     // --- Scheduler ---
-    this._scheduler = new Scheduler({ onEvent: showNotification });
+    this._scheduler = new Scheduler({
+      onEvent: (event) => {
+        showNotification(event);
+        // Refresh quran popup so page count stays current
+        if (this._quranSection) this._quranSection.update();
+      },
+    });
     this._scheduler.enable();
 
     // --- Connect GSettings change signals ---
@@ -102,6 +120,16 @@ export default class NidaaExtension extends Extension {
     if (this._adhkarUnsub) {
       this._adhkarUnsub();
       this._adhkarUnsub = null;
+    }
+
+    if (this._quranUnsub) {
+      this._quranUnsub();
+      this._quranUnsub = null;
+    }
+
+    if (this._quranSection) {
+      this._quranSection.destroy();
+      this._quranSection = null;
     }
 
     destroyNotifications();
@@ -188,11 +216,15 @@ export default class NidaaExtension extends Extension {
   _onCalcSettingsChanged() {
     if (!this._scheduler) return;
 
-    // Re-register both providers with current location (they read settings live)
+    // Re-register all providers with current location (they read settings live)
     if (this._currentLocation) {
       this._registerPrayerProvider(this._currentLocation);
       this._registerAdhkarProvider(this._currentLocation);
+      this._registerQuranProvider(this._currentLocation);
     }
+
+    // Refresh quran popup if visible
+    if (this._quranSection) this._quranSection.update();
 
     this._scheduler.refresh();
     console.log(`${LOG_PREFIX} scheduler refreshed after calc settings change`);
@@ -241,6 +273,12 @@ export default class NidaaExtension extends Extension {
         // Register the adhkar provider
         this._registerAdhkarProvider(location);
 
+        // Register the quran provider
+        this._registerQuranProvider(location);
+
+        // Attach quran popup section to the indicator
+        this._ensureQuranSection();
+
         // Tell the scheduler to re-fetch events
         if (this._scheduler) this._scheduler.refresh();
       } else {
@@ -287,6 +325,45 @@ export default class NidaaExtension extends Extension {
 
     this._adhkarUnsub = this._scheduler.addProvider(provider);
     console.log(`${LOG_PREFIX} adhkar provider registered`);
+  }
+
+  /**
+   * Register the quran event provider with the scheduler.
+   * Unregisters any previous quran provider first.
+   */
+  _registerQuranProvider(location) {
+    if (this._quranUnsub) {
+      this._quranUnsub();
+      this._quranUnsub = null;
+    }
+
+    const provider = createQuranProvider({
+      location,
+      settings: this._settings,
+    });
+
+    this._quranUnsub = this._scheduler.addProvider(provider);
+    console.log(`${LOG_PREFIX} quran provider registered`);
+  }
+
+  /**
+   * Attach the QuranPopupSection to the indicator's popup menu.
+   * Also wraps showNotification to refresh the quran popup on each event.
+   */
+  _ensureQuranSection() {
+    if (!this._indicator) return;
+
+    try {
+      this._quranSection = new QuranPopupSection();
+      this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+      const quranItem = new PopupMenu.PopupBaseMenuItem({ reactive: false });
+      quranItem.add_child(this._quranSection.actor);
+      this._indicator.menu.addMenuItem(quranItem);
+      this._quranSection.update();
+      console.log(`${LOG_PREFIX} quran popup section attached`);
+    } catch (err) {
+      console.error(`${LOG_PREFIX} failed to attach quran section: ${err}`);
+    }
   }
 
   /**
