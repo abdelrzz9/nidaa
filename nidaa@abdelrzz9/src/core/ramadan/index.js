@@ -13,6 +13,7 @@
 
 import { getHijriDate } from '../hijri/index.js';
 import { createEvent } from '../scheduler/event.js';
+import { _ } from '../i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Ramadan]';
 
@@ -137,8 +138,8 @@ export function createRamadanProvider({ prayerTimes, settings, now }) {
         events.push(createEvent({
           id: `ramadan-taraweeh-${currentDate}`,
           type: 'adhkar',
-          title: '🕌 Taraweeh',
-          description: 'Time for Taraweeh prayer.',
+          title: '🕌 ' + _('Taraweeh'),
+          description: _('Time for Taraweeh prayer.'),
           time: taraweehTime,
           priority: 4,
         }));
@@ -155,8 +156,8 @@ export function createRamadanProvider({ prayerTimes, settings, now }) {
         if (qadrTime.getTime() > ref.getTime()) {
           const isOdd = qadrInfo.isOddNight;
           const title = isOdd
-            ? '🌙 Laylat al-Qadr (Odd Night)'
-            : '🌙 Last Ten Nights';
+            ? '🌙 ' + _('Laylat al-Qadr (Odd Night)')
+            : '🌙 ' + _('Last Ten Nights');
           const body = isOdd
             ? `This may be Laylat al-Qadr — the Night of Decree. The Prophet ﷺ said: "Seek it in the odd nights of the last ten days of Ramadan." (Bukhari 2020)`
             : `We are in the last ten nights of Ramadan. Seek Laylat al-Qadr — the Night of Decree, better than a thousand months.`;
@@ -182,7 +183,7 @@ export function createRamadanProvider({ prayerTimes, settings, now }) {
         events.push(createEvent({
           id: `ramadan-dua-${currentDate}`,
           type: 'reminder',
-          title: '🤲 Daily Ramadan Dua',
+          title: '🤲 ' + _('Daily Ramadan Dua'),
           description: `${dua.text}\n\n${dua.translation}\n\n${dua.reference}`,
           time: duaTime,
           priority: 3,

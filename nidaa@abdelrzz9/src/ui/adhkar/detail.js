@@ -23,6 +23,7 @@ import Pango from 'gi://Pango';
 import * as ModalDialog from 'resource:///org/gnome/shell/ui/modalDialog.js';
 
 import { getAdhkarContent } from '../../core/adhkar/index.js';
+import { _ } from '../../core/i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Adhkar:Detail]';
 
@@ -184,7 +185,7 @@ export function showAdhkarDetail(category, lang = 'en') {
 
   // --- Close button ---
   const closeButton = new St.Button({
-    label: 'Close',
+    label: _('Close'),
     style_class: 'nidaa-adhkar-close-button',
     x_align: Clutter.ActorAlign.CENTER,
     reactive: true,

@@ -21,6 +21,7 @@ import { calculatePrayerTimes } from '../prayer/times.js';
 import { getMethodParams } from '../prayer/methods.js';
 import { createEvent } from '../scheduler/event.js';
 import { incrementPage } from './store.js';
+import { _ } from '../i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Quran:Provider]';
 
@@ -30,8 +31,8 @@ const LOG_PREFIX = '[Nidaa:Quran:Provider]';
 
 const QURAN_PRIORITY = 2;
 
-const NOTIFICATION_TITLE = 'Quran Reading';
-const NOTIFICATION_BODY = '📖 Have you read Quran today?\nEven one page is progress.';
+const NOTIFICATION_TITLE = _('Quran Reading');
+const NOTIFICATION_BODY = _('📖 Have you read Quran today?\nEven one page is progress.');
 
 // ------------------------------------------------------------------
 //  GSettings helpers (same pattern as prayer/adhkar providers)
@@ -278,7 +279,7 @@ function _makeEventFromDate(time) {
     sound: null,
     actions: [
       {
-        label: '+1 Page',
+        label: _('+1 Page'),
         callback: () => {
           const progress = incrementPage();
           console.log(
@@ -287,7 +288,7 @@ function _makeEventFromDate(time) {
         },
       },
       {
-        label: 'Dismiss',
+        label: _('Dismiss'),
         callback: () => {},
       },
     ],

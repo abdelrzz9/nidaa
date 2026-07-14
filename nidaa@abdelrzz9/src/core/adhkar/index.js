@@ -26,6 +26,7 @@ import Gio from 'gi://Gio';
 
 import { calculatePrayerTimes } from '../prayer/times.js';
 import { createEvent } from '../scheduler/event.js';
+import { _ } from '../i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Adhkar]';
 
@@ -129,9 +130,9 @@ function localTimezoneOffset() {
  * These are brief excerpts shown in the desktop notification.
  * The full text lives in the detail view (src/ui/adhkar/detail.js).
  */
-const MORNING_SUMMARY = 'Morning Adhkar — Ayat al-Kursi, the Three Quls, and daily formulas';
-const EVENING_SUMMARY = 'Evening Adhkar — Ayat al-Kursi, the Three Quls, and daily formulas';
-const POST_PRAYER_SUMMARY = 'Post-Prayer Adhkar — SubhanAllah ×33, Alhamdulillah ×33, Allahu Akbar ×34';
+const MORNING_SUMMARY = _('Morning Adhkar — Ayat al-Kursi, the Three Quls, and daily formulas');
+const EVENING_SUMMARY = _('Evening Adhkar — Ayat al-Kursi, the Three Quls, and daily formulas');
+const POST_PRAYER_SUMMARY = _('Post-Prayer Adhkar — SubhanAllah ×33, Alhamdulillah ×33, Allahu Akbar ×34');
 
 /** Display names for prayer keys. */
 const PRAYER_NAMES = {
@@ -213,14 +214,14 @@ export function createAdhkarProvider({ location, settings, now: injectableNow })
         events.push(createEvent({
           id: `adhkar-morning-${date.getTime()}`,
           type: 'adhkar',
-          title: 'Morning Adhkar',
+          title: _('Morning Adhkar'),
           description: summary,
           time: morningTime,
           priority: ADHKAR_PRIORITY,
           icon: 'weather-clear-symbolic',
           actions: [
             {
-              label: 'Open Adhkar',
+              label: _('Open Adhkar'),
               callback: () => console.log(`${LOG_PREFIX} morning adhkar opened`),
             },
           ],
@@ -240,14 +241,14 @@ export function createAdhkarProvider({ location, settings, now: injectableNow })
         events.push(createEvent({
           id: `adhkar-evening-${date.getTime()}`,
           type: 'adhkar',
-          title: 'Evening Adhkar',
+          title: _('Evening Adhkar'),
           description: summary,
           time: eveningTime,
           priority: ADHKAR_PRIORITY,
           icon: 'weather-clear-night-symbolic',
           actions: [
             {
-              label: 'Open Adhkar',
+              label: _('Open Adhkar'),
               callback: () => console.log(`${LOG_PREFIX} evening adhkar opened`),
             },
           ],
@@ -274,14 +275,14 @@ export function createAdhkarProvider({ location, settings, now: injectableNow })
       events.push(createEvent({
         id: `adhkar-post-${prayer}-${date.getTime()}`,
         type: 'adhkar-post-prayer',
-        title: `Post-${name} Adhkar`,
+        title: `${_('Post-Prayer Adhkar')} — ${name}`,
         description: summary,
         time: postTime,
         priority: ADHKAR_PRIORITY,
         icon: 'appointment-soon-symbolic',
         actions: [
           {
-            label: 'Open Adhkar',
+            label: _('Open Adhkar'),
             callback: () => console.log(`${LOG_PREFIX} post-${name} adhkar opened`),
           },
         ],

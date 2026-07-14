@@ -25,6 +25,7 @@
 import { calculatePrayerTimes } from './times.js';
 import { getMethodParams } from './methods.js';
 import { createEvent } from '../scheduler/event.js';
+import { _ } from '../i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Prayer:Provider]';
 
@@ -229,14 +230,14 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
           sound: _string(settings, `prayer-sound-${prayer}`, '') || null,
           actions: [
             {
-              label: 'Snooze',
+              label: _('Snooze'),
               callback: () =>
                 console.log(
-                  `${LOG_PREFIX} snooze requested for ${name} (not yet wired to scheduler re-inject)`
+                  `${LOG_PREFIX} snooze requested for ${name}`
                 ),
             },
             {
-              label: 'Mark as Prayed',
+              label: _('Mark as Prayed'),
               callback: () =>
                 console.log(
                   `${LOG_PREFIX} ${name} marked as prayed`

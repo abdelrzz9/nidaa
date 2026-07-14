@@ -16,6 +16,7 @@
 
 import { getHijriDate } from '../hijri/index.js';
 import { createEvent } from '../scheduler/event.js';
+import { _ } from '../i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Events]';
 
@@ -95,8 +96,8 @@ export function createIslamicEventsProvider({ settings, now }) {
           events.push(createEvent({
             id: `friday-thursday-${ref.toISOString().slice(0, 10)}`,
             type: 'reminder',
-            title: '🌙 Tomorrow is Friday',
-            description: "Don't forget to read Surah Al-Kahf tomorrow.",
+            title: '🌙 ' + _('Tomorrow is Friday'),
+            description: _("Don't forget to read Surah Al-Kahf tomorrow."),
             time: thursdayTime,
             priority: 5,
           }));
@@ -110,8 +111,8 @@ export function createIslamicEventsProvider({ settings, now }) {
           events.push(createEvent({
             id: `friday-morning-${ref.toISOString().slice(0, 10)}`,
             type: 'reminder',
-            title: '📖 Read Surah Al-Kahf',
-            description: 'Today is Friday — read Surah Al-Kahf.',
+            title: '📖 ' + _('Read Surah Al-Kahf'),
+            description: _('Today is Friday — read Surah Al-Kahf.'),
             time: morningTime,
             priority: 5,
           }));
@@ -125,8 +126,8 @@ export function createIslamicEventsProvider({ settings, now }) {
           events.push(createEvent({
             id: `friday-afternoon-${ref.toISOString().slice(0, 10)}`,
             type: 'reminder',
-            title: '🤲 Increase Salawat',
-            description: 'Increase your Salawat upon Prophet Muhammad ﷺ today.',
+            title: '🤲 ' + _('Increase Salawat'),
+            description: _('Increase your Salawat upon Prophet Muhammad ﷺ today.'),
             time: afternoonTime,
             priority: 4,
           }));
@@ -147,8 +148,8 @@ export function createIslamicEventsProvider({ settings, now }) {
             events.push(createEvent({
               id: `ashura-before-${ref.toISOString().slice(0, 10)}`,
               type: 'reminder',
-              title: '🌙 Tomorrow is Ashura',
-              description: 'Tomorrow (Muharram 10) is the Day of Ashura. The Prophet ﷺ recommended fasting this day.',
+              title: '🌙 ' + _('Tomorrow is Ashura'),
+              description: _('Tomorrow (Muharram 10) is the Day of Ashura. The Prophet ﷺ recommended fasting this day.'),
               time: reminderTime,
               priority: 6,
             }));
@@ -162,8 +163,8 @@ export function createIslamicEventsProvider({ settings, now }) {
             events.push(createEvent({
               id: `ashura-${ref.toISOString().slice(0, 10)}`,
               type: 'reminder',
-              title: '🕌 Today is Ashura',
-              description: 'Today is the 10th of Muharram, the Day of Ashura. The Prophet ﷺ recommended fasting this day. (Sahih Muslim 1162)',
+              title: '🕌 ' + _('Today is Ashura'),
+              description: _('Today is the 10th of Muharram, the Day of Ashura. The Prophet ﷺ recommended fasting this day. (Sahih Muslim 1162)'),
               time: reminderTime,
               priority: 7,
             }));
@@ -185,8 +186,8 @@ export function createIslamicEventsProvider({ settings, now }) {
             events.push(createEvent({
               id: `arafah-before-${ref.toISOString().slice(0, 10)}`,
               type: 'reminder',
-              title: '🌙 Tomorrow is the Day of Arafah',
-              description: 'Tomorrow (Dhul Hijjah 9) is the Day of Arafah. Fasting this day expiates the sins of the previous and coming year. (Sahih Muslim 1162)',
+              title: '🌙 ' + _('Tomorrow is the Day of Arafah'),
+              description: _('Tomorrow (Dhul Hijjah 9) is the Day of Arafah. Fasting this day expiates the sins of the previous and coming year. (Sahih Muslim 1162)'),
               time: reminderTime,
               priority: 6,
             }));
@@ -200,8 +201,8 @@ export function createIslamicEventsProvider({ settings, now }) {
             events.push(createEvent({
               id: `arafah-${ref.toISOString().slice(0, 10)}`,
               type: 'reminder',
-              title: '🕌 Today is the Day of Arafah',
-              description: 'Today is the 9th of Dhul Hijjah, the Day of Arafah. Fasting this day expiates the sins of the previous and coming year. (Sahih Muslim 1162)',
+              title: '🕌 ' + _('Today is the Day of Arafah'),
+              description: _('Today is the 9th of Dhul Hijjah, the Day of Arafah. Fasting this day expiates the sins of the previous and coming year. (Sahih Muslim 1162)'),
               time: reminderTime,
               priority: 7,
             }));
@@ -221,8 +222,8 @@ export function createIslamicEventsProvider({ settings, now }) {
           events.push(createEvent({
             id: `whitedays-${ref.toISOString().slice(0, 10)}`,
             type: 'reminder',
-            title: '🤍 White Days',
-            description: `These are the White Days (13th–15th of ${monthName}). The Prophet ﷺ recommended fasting these three days each month. (Sahih Muslim 721)`,
+            title: '🤍 ' + _('White Days'),
+            description: _('These are the White Days (13th–15th of the month). The Prophet ﷺ recommended fasting these three days each month. (Sahih Muslim 721)'),
             time: reminderTime,
             priority: 4,
           }));

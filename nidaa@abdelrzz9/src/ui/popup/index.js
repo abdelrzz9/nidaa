@@ -26,7 +26,7 @@ import { readProgress, incrementPage } from '../../core/quran/store.js';
 import { getHijriDate } from '../../core/hijri/index.js';
 import { isRamadan } from '../../core/ramadan/index.js';
 import { getNextIslamicEvent } from '../../core/events/index.js';
-import { _ } from '../../core/i18n/index.js';
+import { _, getLanguage } from '../../core/i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Popup]';
 
@@ -226,8 +226,11 @@ export class PrayerPopupSection {
     // --- Hijri date footer ---
     const hijri = getHijriDate(now);
     if (hijri) {
-      const hijriText = `${hijri.day} ${hijri.monthName} ${hijri.year} AH`;
-      const gregText = now.toLocaleDateString('en-GB', {
+      const hijriText = `${hijri.day} ${hijri.monthName} ${hijri.year} ${_('AH')}`;
+      const lang = getLanguage();
+      const localeMap = { ar: 'ar-SA', fr: 'fr-FR', en: 'en-GB' };
+      const locale = localeMap[lang] || 'en-GB';
+      const gregText = now.toLocaleDateString(locale, {
         weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
       });
       const footerText = `${hijriText}  •  ${gregText}`;
