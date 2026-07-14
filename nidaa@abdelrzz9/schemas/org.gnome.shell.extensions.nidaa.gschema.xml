@@ -11,19 +11,26 @@
         How to determine the user's location.
         'auto' — try Geoclue first, then IP fallback, then cached.
         'manual' — use the lat/lng set in manual-latitude / manual-longitude.
+        'city' — use the bundled city database (manual-latitude / manual-longitude set automatically).
       </description>
     </key>
 
     <key name="manual-latitude" type="d">
       <default>0.0</default>
       <summary>Manual latitude</summary>
-      <description>Latitude used when location-mode is 'manual'.</description>
+      <description>Latitude used when location-mode is 'manual' or 'city'.</description>
     </key>
 
     <key name="manual-longitude" type="d">
       <default>0.0</default>
       <summary>Manual longitude</summary>
-      <description>Longitude used when location-mode is 'manual'.</description>
+      <description>Longitude used when location-mode is 'manual' or 'city'.</description>
+    </key>
+
+    <key name="manual-city-name" type="s">
+      <default>''</default>
+      <summary>Selected city name</summary>
+      <description>Display-only: name of the city selected via the city search.</description>
     </key>
 
     <!-- ======== Prayer calculation ======== -->
@@ -44,21 +51,54 @@
     </key>
 
     <key name="high-latitude-method" type="i">
-      <default>0</default>
+      <default>3</default>
       <summary>High latitude rule</summary>
       <description>
-        0 = night middle, 1 = seventh night, 2 = angle adjustment.
+        0 = None, 1 = Middle of Night, 2 = One-Seventh of Night, 3 = Angle-Based.
       </description>
     </key>
 
     <key name="fajr-angle" type="d">
       <default>18.0</default>
       <summary>Fajr angle in degrees</summary>
+      <description>Only used when prayer-method is Custom.</description>
     </key>
 
     <key name="isha-angle" type="d">
       <default>17.0</default>
-      <summary>Isha angle in degrees (ignored by some methods)</summary>
+      <summary>Isha angle in degrees</summary>
+      <description>Only used when prayer-method is Custom (and method does not use fixed minutes).</description>
+    </key>
+
+    <!-- ======== Per-prayer manual offsets ======== -->
+    <key name="offset-fajr" type="i">
+      <default>0</default>
+      <summary>Fajr time offset in minutes</summary>
+      <description>Manual minutes adjustment applied to calculated Fajr time. Positive = later, negative = earlier.</description>
+    </key>
+
+    <key name="offset-dhuhr" type="i">
+      <default>0</default>
+      <summary>Dhuhr time offset in minutes</summary>
+      <description>Manual minutes adjustment applied to calculated Dhuhr time.</description>
+    </key>
+
+    <key name="offset-asr" type="i">
+      <default>0</default>
+      <summary>Asr time offset in minutes</summary>
+      <description>Manual minutes adjustment applied to calculated Asr time.</description>
+    </key>
+
+    <key name="offset-maghrib" type="i">
+      <default>0</default>
+      <summary>Maghrib time offset in minutes</summary>
+      <description>Manual minutes adjustment applied to calculated Maghrib time.</description>
+    </key>
+
+    <key name="offset-isha" type="i">
+      <default>0</default>
+      <summary>Isha time offset in minutes</summary>
+      <description>Manual minutes adjustment applied to calculated Isha time.</description>
     </key>
 
     <!-- ======== Notifications ======== -->

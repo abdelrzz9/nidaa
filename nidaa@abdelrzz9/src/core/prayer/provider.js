@@ -173,7 +173,7 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
     const asrIdx = _int(settings, 'asr-method', 0);
     const madhab = asrIdx === 1 ? 'Hanafi' : 'Shafii';
 
-    const highLatIdx = _int(settings, 'high-latitude-method', 1);
+    const highLatIdx = _int(settings, 'high-latitude-method', 3);
     const HIGH_LAT_RULES = ['None', 'MiddleOfNight', 'OneSeventh', 'AngleBased'];
     const highLatitudeRule = HIGH_LAT_RULES[highLatIdx] || 'AngleBased';
 
@@ -205,6 +205,12 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
       const prayerTime = times[prayer];
       if (!prayerTime) continue;
 
+      // Apply per-prayer manual offset (positive = later, negative = earlier)
+      const offsetMinutes = _int(settings, `offset-${prayer}`, 0);
+      const adjustedTime = offsetMinutes !== 0
+        ? new Date(prayerTime.getTime() + offsetMinutes * 60_000)
+        : prayerTime;
+
       // Per-prayer notification toggle
       if (notificationsEnabled && !_bool(settings, `notify-${prayer}`, true)) continue;
 
@@ -217,7 +223,7 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
           type: 'prayer',
           title: `${name} — Adhan`,
           description: ref,
-          time: prayerTime,
+          time: adjustedTime,
           priority: ADHAN_PRIORITY,
           icon: 'alarm-symbolic',
           sound: _string(settings, `prayer-sound-${prayer}`, '') || null,
@@ -242,7 +248,7 @@ export function createPrayerProvider({ location, settings, now: injectableNow })
 
       // --- Iqamah reminder (offset minutes after adhan) ---
       if (notificationsEnabled && iqamahOffset > 0) {
-        const iqamahTime = new Date(prayerTime.getTime() + iqamahOffset * 60_000);
+        const iqamahTime = new Date(adjustedTime.getTime() + iqamahOffset * 60_000);
         events.push(
           createEvent({
             id: `iqamah-${prayer}-${date.getTime()}`,

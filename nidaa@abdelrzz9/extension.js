@@ -12,12 +12,49 @@ import { showNotification, destroyNotifications } from './src/core/notifications
 const LOG_PREFIX = '[Nidaa]';
 const SCHEMA_ID = 'org.gnome.shell.extensions.nidaa';
 
+/**
+ * Settings keys that affect prayer time calculation.
+ * When any of these change, the scheduler must be refreshed.
+ */
+const CALC_SETTINGS_KEYS = [
+  'prayer-method',
+  'asr-method',
+  'high-latitude-method',
+  'fajr-angle',
+  'isha-angle',
+  'offset-fajr',
+  'offset-dhuhr',
+  'offset-asr',
+  'offset-maghrib',
+  'offset-isha',
+  'notifications-enabled',
+  'notify-fajr',
+  'notify-dhuhr',
+  'notify-asr',
+  'notify-maghrib',
+  'notify-isha',
+  'prayer-iqamah-reminder-offset',
+  'prayer-ending-soon-offset',
+];
+
+/**
+ * Settings keys that affect location resolution.
+ * When any of these change, location must be re-resolved.
+ */
+const LOCATION_SETTINGS_KEYS = [
+  'location-mode',
+  'manual-latitude',
+  'manual-longitude',
+];
+
 export default class NidaaExtension extends Extension {
   enable() {
     console.log(`${LOG_PREFIX} enabling`);
     this._indicator = null;
     this._resolveAttempted = false;
     this._providerUnsub = null;
+    this._signalIds = [];
+    this._currentLocation = null;
 
     // --- Settings ---
     this._settings = this._loadSettings();
@@ -26,12 +63,18 @@ export default class NidaaExtension extends Extension {
     this._scheduler = new Scheduler({ onEvent: showNotification });
     this._scheduler.enable();
 
+    // --- Connect GSettings change signals ---
+    this._connectSettingsSignals();
+
     // Start location resolution; indicator is created once we have a fix.
     this._startLocationResolution();
   }
 
   disable() {
     console.log(`${LOG_PREFIX} disabling`);
+
+    // Disconnect all GSettings signals
+    this._disconnectSettingsSignals();
 
     if (this._scheduler) {
       this._scheduler.disable();
@@ -52,6 +95,7 @@ export default class NidaaExtension extends Extension {
 
     this._settings = null;
     this._resolveAttempted = false;
+    this._currentLocation = null;
   }
 
   // ------------------------------------------------------------------
@@ -71,6 +115,78 @@ export default class NidaaExtension extends Extension {
       console.error(`${LOG_PREFIX} failed to load settings: ${err}`);
       return null;
     }
+  }
+
+  // ------------------------------------------------------------------
+  //  GSettings change signal wiring
+  // ------------------------------------------------------------------
+
+  _connectSettingsSignals() {
+    if (!this._settings) return;
+
+    // Prayer calculation settings → refresh scheduler
+    for (const key of CALC_SETTINGS_KEYS) {
+      try {
+        const id = this._settings.connect(`changed::${key}`, () => {
+          console.log(`${LOG_PREFIX} setting "${key}" changed — refreshing scheduler`);
+          this._onCalcSettingsChanged();
+        });
+        this._signalIds.push(id);
+      } catch (err) {
+        console.warn(`${LOG_PREFIX} could not connect to changed::${key}: ${err}`);
+      }
+    }
+
+    // Location settings → re-resolve location
+    for (const key of LOCATION_SETTINGS_KEYS) {
+      try {
+        const id = this._settings.connect(`changed::${key}`, () => {
+          console.log(`${LOG_PREFIX} setting "${key}" changed — re-resolving location`);
+          this._onLocationSettingsChanged();
+        });
+        this._signalIds.push(id);
+      } catch (err) {
+        console.warn(`${LOG_PREFIX} could not connect to changed::${key}: ${err}`);
+      }
+    }
+
+    console.log(`${LOG_PREFIX} connected ${this._signalIds.length} settings signals`);
+  }
+
+  _disconnectSettingsSignals() {
+    if (this._settings && this._signalIds.length > 0) {
+      for (const id of this._signalIds) {
+        this._settings.disconnect(id);
+      }
+      this._signalIds = [];
+    }
+  }
+
+  /**
+   * Called when any prayer calculation setting changes.
+   * Re-registers the provider and refreshes the scheduler so new events
+   * are generated with the updated calculation parameters.
+   */
+  _onCalcSettingsChanged() {
+    if (!this._scheduler) return;
+
+    // Re-register the provider with current location (it reads settings live)
+    if (this._currentLocation) {
+      this._registerPrayerProvider(this._currentLocation);
+    }
+
+    this._scheduler.refresh();
+    console.log(`${LOG_PREFIX} scheduler refreshed after calc settings change`);
+  }
+
+  /**
+   * Called when any location setting changes.
+   * Re-resolves the location and refreshes the scheduler.
+   */
+  _onLocationSettingsChanged() {
+    if (!this._scheduler) return;
+    this._resolveAttempted = false;
+    this._startLocationResolution();
   }
 
   // ------------------------------------------------------------------
@@ -97,6 +213,7 @@ export default class NidaaExtension extends Extension {
           `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)} ` +
           `(${location.source})`
         );
+        this._currentLocation = location;
         this._indicator.setLocation(location);
 
         // Register the real prayer provider with the scheduler

@@ -1,22 +1,16 @@
-import Adw from 'gi://Adw';
-import Gtk from 'gi://Gtk';
+/*
+ * Nidaa extension preferences — GNOME Shell Preferences interface.
+ *
+ * Entry point for `gnome-extensions prefs nidaa@abdelrzz9`.
+ * Delegates to src/ui/preferences/index.js which builds the
+ * Adw.PreferencesWindow with Prayer and Location pages.
+ */
 
 import Extension from 'resource:///org/gnome/shell/extensions/extension.js';
+import { fillPreferencesWindow } from './src/ui/preferences/index.js';
 
 export default class NidaaPreferences extends Extension.Preferences {
   fillPreferencesWindow(window) {
-    window._wasFilled = true;
-
-    const page = new Adw.PreferencesPage();
-    window.add(page);
-
-    const group = new Adw.PreferencesGroup();
-    page.add(group);
-
-    group.add(
-      new Adw.ActionRow({
-        title: 'Nidaa settings coming soon.',
-      })
-    );
+    fillPreferencesWindow(window);
   }
 }

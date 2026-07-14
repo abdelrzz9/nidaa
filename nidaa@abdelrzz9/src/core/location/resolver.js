@@ -29,21 +29,23 @@ function readManualLocation() {
   if (!settings) return null;
 
   const mode = settings.get_string('location-mode');
-  if (mode !== 'manual') return null;
+  // 'manual' and 'city' both use the manual-latitude/longitude settings
+  if (mode !== 'manual' && mode !== 'city') return null;
 
   const lat = settings.get_double('manual-latitude');
   const lng = settings.get_double('manual-longitude');
 
   if (lat === 0 && lng === 0) {
-    console.log(`${LOG_PREFIX} manual mode selected but coordinates are (0, 0) — skipping`);
+    console.log(`${LOG_PREFIX} ${mode} mode selected but coordinates are (0, 0) — skipping`);
     return null;
   }
 
-  console.log(`${LOG_PREFIX} resolved via settings: ${lat}, ${lng}`);
+  const source = mode === 'city' ? 'city' : 'manual';
+  console.log(`${LOG_PREFIX} resolved via ${source}: ${lat}, ${lng}`);
   return {
     latitude: lat,
     longitude: lng,
-    source: 'manual',
+    source,
     timestamp: Date.now(),
   };
 }
