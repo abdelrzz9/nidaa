@@ -15,6 +15,12 @@ case "${1:-pack}" in
     echo "==> Created $UUID.zip"
     ;;
   install)
+    echo "==> Compiling GSettings schema …"
+    glib-compile-schemas "$UUID/schemas/"
+    EXT_SCHEMA_DIR="$HOME/.local/share/glib-2.0/schemas"
+    mkdir -p "$EXT_SCHEMA_DIR"
+    cp "$UUID/schemas/"*.compiled "$EXT_SCHEMA_DIR/"
+    cp "$UUID/schemas/"*.gschema.xml "$EXT_SCHEMA_DIR/"
     echo "==> Symlinking source dir into GNOME extensions …"
     mkdir -p ~/.local/share/gnome-shell/extensions
     ln -sfn "$(pwd)/$UUID" ~/.local/share/gnome-shell/extensions/"$UUID"
