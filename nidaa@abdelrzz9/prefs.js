@@ -6,10 +6,10 @@
  * Adw.PreferencesWindow with Prayer and Location pages.
  */
 
-import Extension from 'resource:///org/gnome/shell/extensions/extension.js';
+import { ExtensionPreferences } from 'resource:///org/gnome/shell/extensions/extension.js';
 import { fillPreferencesWindow } from './src/ui/preferences/index.js';
 
-export default class NidaaPreferences extends Extension.Preferences {
+export default class NidaaPreferences extends ExtensionPreferences {
   fillPreferencesWindow(window) {
     fillPreferencesWindow(window);
   }
