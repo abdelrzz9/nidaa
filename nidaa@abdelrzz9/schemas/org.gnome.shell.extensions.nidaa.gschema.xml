@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.nidaa"
+          path="/org/gnome/shell/extensions/nidaa/">
+
+    <!-- ======== Location ======== -->
+    <key name="location-mode" type="s">
+      <default>'auto'</default>
+      <summary>Location resolution method</summary>
+      <description>
+        How to determine the user's location.
+        'auto' — try Geoclue first, then IP fallback, then cached.
+        'manual' — use the lat/lng set in manual-latitude / manual-longitude.
+      </description>
+    </key>
+
+    <key name="manual-latitude" type="d">
+      <default>0.0</default>
+      <summary>Manual latitude</summary>
+      <description>Latitude used when location-mode is 'manual'.</description>
+    </key>
+
+    <key name="manual-longitude" type="d">
+      <default>0.0</default>
+      <summary>Manual longitude</summary>
+      <description>Longitude used when location-mode is 'manual'.</description>
+    </key>
+
+    <!-- ======== Prayer calculation ======== -->
+    <key name="prayer-method" type="i">
+      <default>0</default>
+      <summary>Calculation method</summary>
+      <description>
+        Prayer time calculation method.
+        0 = Muslim World League, 1 = ISNA, 2 = Egypt, 3 = Umm al-Qura,
+        4 = Karachi, 5 = Tehran, 6 = Jafari, 7 = Custom.
+      </description>
+    </key>
+
+    <key name="asr-method" type="i">
+      <default>0</default>
+      <summary>Asr calculation method</summary>
+      <description>0 = Shafii (standard), 1 = Hanafi.</description>
+    </key>
+
+    <key name="high-latitude-method" type="i">
+      <default>0</default>
+      <summary>High latitude rule</summary>
+      <description>
+        0 = night middle, 1 = seventh night, 2 = angle adjustment.
+      </description>
+    </key>
+
+    <key name="fajr-angle" type="d">
+      <default>18.0</default>
+      <summary>Fajr angle in degrees</summary>
+    </key>
+
+    <key name="isha-angle" type="d">
+      <default>17.0</default>
+      <summary>Isha angle in degrees (ignored by some methods)</summary>
+    </key>
+
+    <!-- ======== Notifications ======== -->
+    <key name="notifications-enabled" type="b">
+      <default>true</default>
+      <summary>Enable prayer notifications</summary>
+    </key>
+
+    <key name="notify-fajr" type="b">
+      <default>true</default>
+      <summary>Notify at Fajr time</summary>
+    </key>
+
+    <key name="notify-dhuhr" type="b">
+      <default>true</default>
+      <summary>Notify at Dhuhr time</summary>
+    </key>
+
+    <key name="notify-asr" type="b">
+      <default>true</default>
+      <summary>Notify at Asr time</summary>
+    </key>
+
+    <key name="notify-maghrib" type="b">
+      <default>true</default>
+      <summary>Notify at Maghrib time</summary>
+    </key>
+
+    <key name="notify-isha" type="b">
+      <default>true</default>
+      <summary>Notify at Isha time</summary>
+    </key>
+
+    <key name="adhan-volume" type="d">
+      <default>0.8</default>
+      <summary>Volume for adhan playback (0.0 – 1.0)</summary>
+    </key>
+
+    <!-- ======== Adhkar ======== -->
+    <key name="adhkar-enabled" type="b">
+      <default>true</default>
+      <summary>Enable daily adhkar reminders</summary>
+    </key>
+
+    <!-- ======== Qibla ======== -->
+    <key name="qibla-latitude" type="d">
+      <default>21.4225</default>
+      <summary>Kaaba latitude for Qibla calculation</summary>
+    </key>
+
+    <key name="qibla-longitude" type="d">
+      <default>39.8262</default>
+      <summary>Kaaba longitude for Qibla calculation</summary>
+    </key>
+
+  </schema>
+</schemalist>
