@@ -1,1 +1,97 @@
-/* Nidaa — styles will be added as UI is built */
+/*
+ * Nidaa — prayer times UI styles.
+ *
+ * Uses theme-respecting properties (opacity, font-weight) instead of
+ * hardcoded colours so the extension works in both light and dark
+ * GNOME Shell themes.
+ */
+
+/* ── Panel indicator ─────────────────────────────────────────────── */
+
+.nidaa-indicator {
+  spacing: 4px;
+}
+
+.nidaa-icon {
+  icon-size: 16px;
+}
+
+.nidaa-label {
+  font-size: 11px;
+  margin-left: 2px;
+}
+
+/* ── Popup container ─────────────────────────────────────────────── */
+
+.nidaa-prayer-popup {
+  padding: 8px 0;
+  min-width: 220px;
+}
+
+/* ── Prayer row (shared) ─────────────────────────────────────────── */
+
+.nidaa-prayer-row {
+  padding: 4px 12px;
+  spacing: 8px;
+}
+
+.nidaa-prayer-status {
+  min-width: 16px;
+  font-size: 12px;
+}
+
+.nidaa-prayer-name {
+  font-size: 13px;
+  x_expand: true;
+}
+
+.nidaa-prayer-time {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.nidaa-prayer-countdown {
+  font-size: 11px;
+  margin-left: 6px;
+  opacity: 0.8;
+}
+
+/* ── State: passed ───────────────────────────────────────────────── */
+
+.nidaa-prayer-passed {
+  opacity: 0.45;
+}
+
+.nidaa-prayer-passed .nidaa-prayer-status {
+  color: #8be9fd;  /* soft accent — readable in both themes */
+}
+
+/* ── State: next (highlighted) ───────────────────────────────────── */
+
+.nidaa-prayer-next {
+  font-weight: bold;
+  opacity: 1.0;
+}
+
+.nidaa-prayer-next .nidaa-prayer-status {
+  color: #50fa7b;  /* green accent */
+}
+
+.nidaa-prayer-next .nidaa-prayer-countdown {
+  color: #bd93f9;  /* purple accent */
+}
+
+/* ── State: future ───────────────────────────────────────────────── */
+
+.nidaa-prayer-future {
+  opacity: 0.7;
+}
+
+/* ── Placeholder / loading ───────────────────────────────────────── */
+
+.nidaa-prayer-placeholder {
+  padding: 12px 12px;
+  font-size: 13px;
+  opacity: 0.5;
+  font-style: italic;
+}
