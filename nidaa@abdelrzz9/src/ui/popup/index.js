@@ -24,6 +24,9 @@ import Clutter from 'gi://Clutter';
 
 import { readProgress, incrementPage } from '../../core/quran/store.js';
 import { getHijriDate } from '../../core/hijri/index.js';
+import { isRamadan } from '../../core/ramadan/index.js';
+import { getNextIslamicEvent } from '../../core/events/index.js';
+import { _ } from '../../core/i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Popup]';
 
@@ -166,12 +169,22 @@ export class PrayerPopupSection {
 
     if (!prayerTimes) {
       const placeholder = new St.Label({
-        text: 'Waiting for location…',
+        text: _('Waiting for location…'),
         style_class: 'nidaa-prayer-placeholder',
       });
       this.actor.add_child(placeholder);
       this._rows.push(placeholder);
       return;
+    }
+
+    // --- Ramadan Mode banner ---
+    if (isRamadan(now)) {
+      const banner = new St.Label({
+        text: `🌙 ${_('Ramadan Mode')}`,
+        style_class: 'nidaa-ramadan-banner',
+      });
+      this.actor.add_child(banner);
+      this._rows.push(banner);
     }
 
     // Find the next prayer (first one whose Date is in the future)
@@ -205,7 +218,7 @@ export class PrayerPopupSection {
         state = 'future';
       }
 
-      const row = buildRow(label, timeStr, state, minutesLeft);
+      const row = buildRow(_(label), timeStr, state, minutesLeft);
       this.actor.add_child(row);
       this._rows.push(row);
     }
@@ -224,6 +237,18 @@ export class PrayerPopupSection {
       });
       this.actor.add_child(footer);
       this._rows.push(footer);
+
+      // --- Next upcoming Islamic event ---
+      const nextEvent = getNextIslamicEvent(now);
+      if (nextEvent && nextEvent.daysLeft > 0) {
+        const eventText = `📅 ${nextEvent.name} in ${nextEvent.daysLeft} day${nextEvent.daysLeft > 1 ? 's' : ''}`;
+        const eventLabel = new St.Label({
+          text: eventText,
+          style_class: 'nidaa-hijri-footer',
+        });
+        this.actor.add_child(eventLabel);
+        this._rows.push(eventLabel);
+      }
     }
   }
 
@@ -281,7 +306,7 @@ export class QuranPopupSection {
 
     // Section header
     const header = new St.Label({
-      text: '📖 Quran',
+      text: `📖 ${_('Quran')}`,
       style_class: 'nidaa-quran-header',
     });
     this.actor.add_child(header);
@@ -289,7 +314,7 @@ export class QuranPopupSection {
 
     // Goal label
     const goalLabel = new St.Label({
-      text: "Today's Goal",
+      text: _("Today's Goal"),
       style_class: 'nidaa-quran-goal-label',
     });
     this.actor.add_child(goalLabel);
@@ -302,7 +327,7 @@ export class QuranPopupSection {
       x_expand: true,
     });
 
-    const pagesText = `${progress.pagesRead} / ${progress.dailyGoal} Pages`;
+    const pagesText = `${progress.pagesRead} / ${progress.dailyGoal} ${_('Pages')}`;
     const pagesLabel = new St.Label({
       text: pagesText,
       style_class: 'nidaa-quran-pages',
@@ -313,7 +338,7 @@ export class QuranPopupSection {
 
     // +1 Page button
     const plusButton = new St.Button({
-      label: '+1 Page',
+      label: _('+1 Page'),
       style_class: 'nidaa-quran-button',
       reactive: true,
       track_hover: true,

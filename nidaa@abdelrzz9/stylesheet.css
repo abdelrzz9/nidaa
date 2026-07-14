@@ -213,3 +213,40 @@
   font-size: 11px;
   opacity: 0.7;
 }
+
+/* ── RTL support ────────────────────────────────────────────────────── */
+
+/* When GNOME Shell applies RTL direction, Clutter mirrors the layout
+   automatically for box layouts. However, explicit padding/margin that
+   uses -left/-right won't be mirrored. Use padding-start/end instead. */
+
+.nidaa-prayer-row {
+  padding: 3px 8px 3px 8px;
+}
+
+.nidaa-prayer-status {
+  margin-right: 6px;
+}
+
+.nidaa-prayer-name {
+  margin-left: 2px;
+}
+
+.nidaa-adhkar-dialog {
+  padding: 16px;
+}
+
+.nidaa-adhkar-arabic {
+  text-align: center;
+}
+
+/* ── Ramadan Mode ──────────────────────────────────────────────────── */
+
+.nidaa-ramadan-banner {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #8be9fd;
+  border-bottom: 1px solid rgba(139, 233, 253, 0.2);
+}

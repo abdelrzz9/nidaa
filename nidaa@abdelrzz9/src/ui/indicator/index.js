@@ -24,6 +24,7 @@ import { PopupMenu } from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { calculatePrayerTimes } from '../../core/prayer/times.js';
 import { PrayerPopupSection } from '../popup/index.js';
+import { _ } from '../../core/i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Indicator]';
 
@@ -38,12 +39,14 @@ const DEFAULT_METHOD = 'MWL';
  *   - null        → "Nidaa"
  */
 function countdownText(prayerName, minutesLeft) {
-  if (minutesLeft == null) return 'Nidaa';
-  if (minutesLeft <= 0) return `${prayerName} now`;
-  if (minutesLeft < 60) return `${prayerName} in ${minutesLeft} min`;
+  if (minutesLeft == null) return _('Nidaa');
+  if (minutesLeft <= 0) return `${prayerName} ${_('now')}`;
+  if (minutesLeft < 60) return `${prayerName} ${_('in')} ${minutesLeft} ${_('min')}`;
   const h = Math.floor(minutesLeft / 60);
   const m = minutesLeft % 60;
-  return m > 0 ? `${prayerName} in ${h}h ${m}m` : `${prayerName} in ${h}h`;
+  return m > 0
+    ? `${prayerName} ${_('in')} ${h}${_('h')} ${m}${_('min')}`
+    : `${prayerName} ${_('in')} ${h}${_('h')}`;
 }
 
 /**
@@ -85,7 +88,7 @@ export class PrayerIndicator extends PanelMenu.Button {
     this._panelBox.add_child(this._icon);
 
     this._label = new St.Label({
-      text: 'Resolving location…',
+      text: _('Resolving location…'),
       style_class: 'nidaa-label',
       y_align: Clutter.ActorAlign.CENTER,
     });
@@ -144,7 +147,7 @@ export class PrayerIndicator extends PanelMenu.Button {
    * @returns {string}
    */
   _nextPrayerText(now) {
-    if (!this._prayerTimes) return 'Resolving location…';
+    if (!this._prayerTimes) return _('Resolving location…');
 
     const prayers = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
     for (const key of prayers) {

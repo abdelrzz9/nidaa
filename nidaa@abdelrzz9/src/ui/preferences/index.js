@@ -17,6 +17,9 @@ import { buildPrayerPage } from './prayer_page.js';
 import { buildLocationPage } from './location_page.js';
 import { buildAdhkarPage } from './adhkar_page.js';
 import { buildQuranPage } from './quran_page.js';
+import { buildRamadanPage } from './ramadan_page.js';
+import { buildEventsPage } from './events_page.js';
+import { buildSettingsPage } from './settings_page.js';
 
 const LOG_PREFIX = '[Nidaa:Prefs]';
 const SCHEMA_ID = 'org.gnome.shell.extensions.nidaa';
@@ -59,11 +62,17 @@ export function fillPreferencesWindow(window) {
   const locationPage = buildLocationPage(settings);
   const adhkarPage = buildAdhkarPage(settings);
   const quranPage = buildQuranPage(settings);
+  const ramadanPage = buildRamadanPage(settings);
+  const eventsPage = buildEventsPage(settings);
+  const settingsPage = buildSettingsPage(settings);
 
   window.add(prayerPage);
   window.add(locationPage);
   window.add(adhkarPage);
   window.add(quranPage);
+  window.add(ramadanPage);
+  window.add(eventsPage);
+  window.add(settingsPage);
 
   // Set a reasonable default size for the preferences window
   window.set_default_size(600, 500);

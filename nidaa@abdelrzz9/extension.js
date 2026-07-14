@@ -12,6 +12,9 @@ import { createAdhkarProvider } from './src/core/adhkar/index.js';
 import { createQuranProvider } from './src/core/quran/provider.js';
 import { showNotification, destroyNotifications } from './src/core/notifications/index.js';
 import { QuranPopupSection } from './src/ui/popup/index.js';
+import { setup as setupI18n, setLanguage } from './src/core/i18n/index.js';
+import { createRamadanProvider } from './src/core/ramadan/index.js';
+import { createIslamicEventsProvider } from './src/core/events/index.js';
 
 const LOG_PREFIX = '[Nidaa]';
 const SCHEMA_ID = 'org.gnome.shell.extensions.nidaa';
@@ -28,7 +31,7 @@ const CALC_SETTINGS_KEYS = [
   'isha-angle',
   'offset-fajr',
   'offset-dhuhr',
-  'offset-asr',
+ 'offset-asr',
   'offset-maghrib',
   'offset-isha',
   'notifications-enabled',
@@ -39,7 +42,6 @@ const CALC_SETTINGS_KEYS = [
   'notify-isha',
   'prayer-iqamah-reminder-offset',
   'prayer-ending-soon-offset',
-  // Adhkar settings (affect adhkar scheduling)
   'adhkar-enabled',
   'adhkar-language',
   'adhkar-morning-offset',
@@ -50,13 +52,28 @@ const CALC_SETTINGS_KEYS = [
   'adhkar-post-asr',
   'adhkar-post-maghrib',
   'adhkar-post-isha',
-  // Quran settings (affect quran scheduling)
   'quran-enabled',
   'quran-frequency',
   'quran-daily-goal',
   'quran-offset',
   'quran-window-start',
   'quran-window-end',
+  'ui-language',
+  'ramadan-enabled',
+  'force-ramadan',
+  'ramadan-taraweeh-enabled',
+  'ramadan-taraweeh-offset',
+  'ramadan-laylat-qadr-enabled',
+  'ramadan-daily-dua-enabled',
+  'events-friday-enabled',
+  'events-friday-thursday-hour',
+  'events-friday-morning-hour',
+  'events-friday-afternoon-hour',
+  'events-ashura-enabled',
+  'events-ashura-daybefore',
+  'events-arafah-enabled',
+  'events-arafah-daybefore',
+  'events-whitedays-enabled',
 ];
 
 /**
@@ -77,12 +94,23 @@ export default class NidaaExtension extends Extension {
     this._providerUnsub = null;
     this._adhkarUnsub = null;
     this._quranUnsub = null;
+    this._ramadanUnsub = null;
+    this._eventsUnsub = null;
     this._quranSection = null;
     this._signalIds = [];
     this._currentLocation = null;
 
     // --- Settings ---
     this._settings = this._loadSettings();
+
+    // --- i18n ---
+    try {
+      setupI18n(this.path);
+      const lang = this._settings ? this._settings.get_string('ui-language') : 'en';
+      setLanguage(lang && lang !== '' ? lang : 'en');
+    } catch (err) {
+      console.warn(`${LOG_PREFIX} i18n setup failed: ${err}`);
+    }
 
     // --- Scheduler ---
     this._scheduler = new Scheduler({
@@ -125,6 +153,16 @@ export default class NidaaExtension extends Extension {
     if (this._quranUnsub) {
       this._quranUnsub();
       this._quranUnsub = null;
+    }
+
+    if (this._ramadanUnsub) {
+      this._ramadanUnsub();
+      this._ramadanUnsub = null;
+    }
+
+    if (this._eventsUnsub) {
+      this._eventsUnsub();
+      this._eventsUnsub = null;
     }
 
     if (this._quranSection) {
@@ -221,6 +259,8 @@ export default class NidaaExtension extends Extension {
       this._registerPrayerProvider(this._currentLocation);
       this._registerAdhkarProvider(this._currentLocation);
       this._registerQuranProvider(this._currentLocation);
+      this._registerRamadanProvider();
+      this._registerEventsProvider();
     }
 
     // Refresh quran popup if visible
@@ -275,6 +315,12 @@ export default class NidaaExtension extends Extension {
 
         // Register the quran provider
         this._registerQuranProvider(location);
+
+        // Register the ramadan provider (conditionally active)
+        this._registerRamadanProvider();
+
+        // Register the Islamic events provider
+        this._registerEventsProvider();
 
         // Attach quran popup section to the indicator
         this._ensureQuranSection();
@@ -344,6 +390,44 @@ export default class NidaaExtension extends Extension {
 
     this._quranUnsub = this._scheduler.addProvider(provider);
     console.log(`${LOG_PREFIX} quran provider registered`);
+  }
+
+  /**
+   * Register the ramadan event provider with the scheduler.
+   * The ramadan provider uses the current prayer times and settings.
+   */
+  _registerRamadanProvider() {
+    if (this._ramadanUnsub) {
+      this._ramadanUnsub();
+      this._ramadanUnsub = null;
+    }
+
+    if (!this._currentLocation) return;
+
+    const provider = createRamadanProvider({
+      prayerTimes: this._indicator ? this._indicator._prayerTimes : null,
+      settings: this._settings,
+    });
+
+    this._ramadanUnsub = this._scheduler.addProvider(provider);
+    console.log(`${LOG_PREFIX} ramadan provider registered`);
+  }
+
+  /**
+   * Register the Islamic events provider with the scheduler.
+   */
+  _registerEventsProvider() {
+    if (this._eventsUnsub) {
+      this._eventsUnsub();
+      this._eventsUnsub = null;
+    }
+
+    const provider = createIslamicEventsProvider({
+      settings: this._settings,
+    });
+
+    this._eventsUnsub = this._scheduler.addProvider(provider);
+    console.log(`${LOG_PREFIX} islamic events provider registered`);
   }
 
   /**
