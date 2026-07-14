@@ -14,6 +14,8 @@
  *   - Asr   = Dhuhr + T(cot⁻¹(factor + tan|lat - dec|))
  *   - Maghrib = Sunset + 1 min (Sunni precaution)
  *   - Dhuhr   = Dhuhr + 1 min (precaution)
+ *   - Elevation: sunrise/sunset depression adjusted by horizon dip
+ *     (acos(R_earth / (R_earth + h))) for elevated observers
  *
  * Usage:
  *   import { calculatePrayerTimes } from './times.js';
@@ -27,6 +29,7 @@ import {
   asrAltitude,
   hoursToDate,
   normalizeHours,
+  elevationDip,
 } from './astronomy.js';
 
 import { getMethodParams } from './methods.js';
@@ -60,7 +63,7 @@ const DEFAULT_ISHA_ANGLE = 14;
  * @param {string} [opts.method='MWL']    - Method ID
  * @param {string} [opts.madhab='Shafii'] - 'Shafii' or 'Hanafi'
  * @param {string} [opts.highLatitudeRule='AngleBased'] - 'None','AngleBased','MiddleOfNight','OneSeventh'
- * @param {number} [opts.elevation=0]     - Elevation in meters (not yet used in calculation)
+ * @param {number} [opts.elevation=0]     - Elevation in meters (adjusts sunrise/sunset via horizon dip)
  * @param {number} [opts.customFajrAngle] - Required if method='Custom'
  * @param {number} [opts.customIshaAngle] - Required if method='Custom'
  * @returns {PrayerTimes}
@@ -92,7 +95,11 @@ export function calculatePrayerTimes(opts) {
   dhuhr = normalizeHours(dhuhr);
 
   // ---- Sunrise / Sunset ----
-  const haSunrise = hourAngle(-0.833, lat, dec);
+  // Standard geometric depression: 0.833° (solar radius 0.267° + refraction 0.567°).
+  // For elevated observers the horizon dips, extending the visible day.
+  const dip = elevationDip(elevation);
+  const sunriseSunsetDepression = 0.833 + dip;
+  const haSunrise = hourAngle(-sunriseSunsetDepression, lat, dec);
 
   let sunrise = null;
   let sunset = null;

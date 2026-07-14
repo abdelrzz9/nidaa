@@ -164,3 +164,24 @@ export function normalizeHours(h) {
 export function clamp(v, min, max) {
   return Math.min(Math.max(v, min), max);
 }
+
+/** Mean Earth radius in kilometers. */
+const EARTH_RADIUS_KM = 6371;
+
+/**
+ * Compute the horizon dip angle for an elevated observer.
+ *
+ * From the observer's vantage point at elevation h meters, the geometric
+ * horizon is below the true horizontal by this many degrees.  This means
+ * sunrise appears earlier and sunset later than at sea level.
+ *
+ *   dip = acos(R / (R + h))
+ *
+ * @param {number} elevation - Height above sea level in meters
+ * @returns {number} Dip angle in degrees (always >= 0)
+ */
+export function elevationDip(elevation) {
+  if (!elevation || elevation <= 0) return 0;
+  const hKm = elevation / 1000;
+  return Math.acos(EARTH_RADIUS_KM / (EARTH_RADIUS_KM + hKm)) * RAD;
+}

@@ -82,9 +82,9 @@ export const METHODS = {
   },
   Moonsighting: {
     id: 'Moonsighting',
-    name: 'Moonsighting Committee / Shafaq',
+    name: 'Moonsighting Committee Worldwide (simplified)',
     fajrAngle: 18,
-    ishaAngle: 17,
+    ishaAngle: 18,
     ishaMinutes: null,
     maghribAngle: null,
     midnightMethod: 'Standard',
