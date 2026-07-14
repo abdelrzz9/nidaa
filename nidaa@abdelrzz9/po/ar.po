@@ -1,0 +1,539 @@
+# Arabic translation for Nidaa GNOME Shell Extension
+# Copyright (C) 2024 Nidaa Contributors
+# This file is distributed under the same license as the Nidaa package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nidaa 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);\n"
+
+msgid "Resolving location…"
+msgstr "جارٍ تحديد الموقع…"
+
+msgid "Nidaa"
+msgstr "نِداء"
+
+msgid "Fajr"
+msgstr "الفجر"
+
+msgid "Sunrise"
+msgstr "الشروق"
+
+msgid "Dhuhr"
+msgstr "الظهر"
+
+msgid "Asr"
+msgstr "العصر"
+
+msgid "Maghrib"
+msgstr "المغرب"
+
+msgid "Isha"
+msgstr "العشاء"
+
+msgid "Suhoor"
+msgstr "السحور"
+
+msgid "Iftar"
+msgstr "الإفطار"
+
+msgid "in"
+msgstr "بعد"
+
+msgid "min"
+msgstr "د"
+
+msgid "now"
+msgstr "الآن"
+
+msgid "h"
+msgstr "س"
+
+msgid "Waiting for location…"
+msgstr "بانتظار الموقع…"
+
+msgid "Pages"
+msgstr "صفحات"
+
+msgid "+1 Page"
+msgstr "+1 صفحة"
+
+msgid "Today's Goal"
+msgstr "الهدف اليومي"
+
+msgid "Prayer"
+msgstr "أوقات الصلاة"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "Adhkar"
+msgstr "الأذكار"
+
+msgid "Quran"
+msgstr "القرآن"
+
+msgid "Islamic Events"
+msgstr "الأحداث الإسلامية"
+
+msgid "General"
+msgstr "عام"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Calculation Method"
+msgstr "طريقة الحساب"
+
+msgid "Choose the method used to calculate prayer times."
+msgstr "اختر الطريقة المستخدمة لحساب أوقات الصلاة."
+
+msgid "Method"
+msgstr "الطريقة"
+
+msgid "Different organizations use slightly different twilight angles."
+msgstr "تستخدم المنظمات المختلفة زوايا غروب مختلفة قليلاً."
+
+msgid "Muslim World League (MWL)"
+msgstr "رابطة العالم الإسلامي (MWL)"
+
+msgid "Islamic Society of North America (ISNA)"
+msgstr "الجمعية الإسلامية لأمريكا الشمالية (ISNA)"
+
+msgid "Egyptian General Authority of Survey"
+msgstr "الهيئة المصرية العامة للمساحة"
+
+msgid "Umm Al-Qura University (Makkah)"
+msgstr "جامعة أم القرى (مكة المكرمة)"
+
+msgid "University of Islamic Sciences, Karachi"
+msgstr "جامعة العلوم الإسلامية (كراتشي)"
+
+msgid "Institute of Geophysics, University of Tehran"
+msgstr "معهد الجيوفيزياء (جامعة طهران)"
+
+msgid "Leva Research Institute (Qom) / Shia Ithna Ashari"
+msgstr "معهد ليفا للبحوث (قم) / الشيعة الاثنا عشرية"
+
+msgid "Custom (user-supplied angles)"
+msgstr "مخصص (زوايا المستخدم)"
+
+msgid "Custom Angles"
+msgstr "زوايا مخصصة"
+
+msgid "Set your own Fajr and Isha twilight angles."
+msgstr "حدد زوايا الشفق الخاصة بك للفجر والعشاء."
+
+msgid "Fajr angle (°)"
+msgstr "زاوية الفجر (°)"
+
+msgid "Isha angle (°)"
+msgstr "زاوية العشاء (°)"
+
+msgid "Madhab"
+msgstr "المذهب"
+
+msgid "Determines how Asr prayer time is calculated."
+msgstr "يحدد كيفية حساب وقت صلاة العصر."
+
+msgid "Asr Calculation"
+msgstr "حساب العصر"
+
+msgid "Shafii uses shadow length = object height; Hanafi uses double."
+msgstr "الشافعي: طول الظل = ارتفاع الجسم. الحنفي: ضعف الظل."
+
+msgid "Shafii (standard)"
+msgstr "شافعي (قياسي)"
+
+msgid "Hanafi"
+msgstr "حنفي"
+
+msgid "High Latitude Rule"
+msgstr "قاعدة العرض العالي"
+
+msgid "For locations above ~48° latitude where twilight persists."
+msgstr "لل地方ات التي تتجاوز خط عرضها 48° حيث يستمر الشفق."
+
+msgid "Night Method"
+msgstr "طريقة الليل"
+
+msgid "How to determine Fajr/Isha when the sun barely sets."
+msgstr "كيفية تحديد الفجر/العشاء عندما يكاد الغروب لا يتلاشى."
+
+msgid "None"
+msgstr "بدون"
+
+msgid "Angle-Based (recommended)"
+msgstr "قائم على الزاوية (موصى به)"
+
+msgid "Middle of Night"
+msgstr "منتصف الليل"
+
+msgid "One-Seventh of Night"
+msgstr "سبع الليل"
+
+msgid "Time Adjustments"
+msgstr "تعديلات الوقت"
+
+msgid "Fine-tune individual prayer times if your local mosque differs slightly."
+msgstr "اضبط أوقات الصلاة إذا كان مسجدك المحلي يختلف قليلاً."
+
+msgid "Minutes (positive = later, negative = earlier)"
+msgstr "الدقائق (موجب = أ晚، سالب = أبكر)"
+
+msgid "Fajr Offset"
+msgstr "تعديل الفجر"
+
+msgid "Dhuhr Offset"
+msgstr "تعديل الظهر"
+
+msgid "Asr Offset"
+msgstr "تعديل العصر"
+
+msgid "Maghrib Offset"
+msgstr "تعديل المغرب"
+
+msgid "Isha Offset"
+msgstr "تعديل العشاء"
+
+msgid "Current Location"
+msgstr "الموقع الحالي"
+
+msgid "Resolving location..."
+msgstr "جارٍ تحديد الموقع..."
+
+msgid "Waiting for first fix."
+msgstr "بانتظار الإحداثيات الأولى."
+
+msgid "Location Source"
+msgstr "مصدر الموقع"
+
+msgid "How Nidaa determines your position for prayer times."
+msgstr "كيف يحدد نِداء موقعك لأوقات الصلاة."
+
+msgid "Location Mode"
+msgstr "وضع الموقع"
+
+msgid "Automatic uses Geoclue with IP fallback."
+msgstr "التلقائي يستخدم Geoclue مع البديل عبر IP."
+
+msgid "Automatic (Geoclue + IP)"
+msgstr "تلقائي (Geoclue + IP)"
+
+msgid "Search city"
+msgstr "البحث عن مدينة"
+
+msgid "Enter coordinates manually"
+msgstr "إدخال الإحداثيات يدوياً"
+
+msgid "Manual Coordinates"
+msgstr "إحداثيات يدوية"
+
+msgid "Enter latitude and longitude in decimal degrees."
+msgstr "أدخل خط العرض والطول بالدرجات العشرية."
+
+msgid "Latitude"
+msgstr "خط العرض"
+
+msgid "North is positive, South is negative (-90 to 90)."
+msgstr "الشمال موجب، الجنوب سالب (-90 إلى 90)."
+
+msgid "Longitude"
+msgstr "خط الطول"
+
+msgid "East is positive, West is negative (-180 to 180)."
+msgstr "الشرق موجب، الغرب سالب (-180 إلى 180)."
+
+msgid "City Search"
+msgstr "البحث عن مدينة"
+
+msgid "Select a city from the bundled database (offline)."
+msgstr "اختر مدينة من قاعدة البيانات المدمجة (دون اتصال)."
+
+msgid "Search cities..."
+msgstr "البحث عن مدن..."
+
+msgid "No location set"
+msgstr "لم يتم تعيين موقع"
+
+msgid "Enter coordinates or select a city."
+msgstr "أدخل الإحداثيات أو اختر مدينة."
+
+msgid "Automatic"
+msgstr "تلقائي"
+
+msgid "Using Geoclue with IP fallback. Location is resolved at startup."
+msgstr "يستخدم Geoclue مع البديل عبر IP. يتم تحديد الموقع عند بدء التشغيل."
+
+msgid "Enable Adhkar"
+msgstr "تفعيل الأذكار"
+
+msgid "Show reminders for morning, evening, and post-prayer adhkar."
+msgstr "عرض تذكيرات لأذكار الصباح والمساء وما بعد الصلاة."
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Choose the language for adhkar text."
+msgstr "اختر لغة نصوص الأذكار."
+
+msgid "Arabic"
+msgstr "العربية"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "French"
+msgstr "الفرنسية"
+
+msgid "Timing"
+msgstr "التوقيت"
+
+msgid "Adjust when adhkar notifications are sent relative to prayer times."
+msgstr "اضبط متى يتم إرسال إشعارات الأذكار بالنسبة لأوقات الصلاة."
+
+msgid "Morning Adhkar Offset"
+msgstr "تأخير أذكار الصباح"
+
+msgid "Minutes after sunrise to send the reminder."
+msgstr "الدقائق بعد شروق الشمس لإرسال التذكير."
+
+msgid "Evening Adhkar Offset"
+msgstr "تأخير أذكار المساء"
+
+msgid "Minutes before Maghrib to send the reminder."
+msgstr "الدقائق قبل المغرب لإرسال التذكير."
+
+msgid "Post-Prayer Offset"
+msgstr "تأخير ما بعد الصلاة"
+
+msgid "Minutes after the Iqamah reminder to send the post-prayer adhkar."
+msgstr "الدقائق بعد تذكير الإقامة لإرسال أذكار ما بعد الصلاة."
+
+msgid "Per-Prayer Adhkar"
+msgstr "أذكار كل صلاة"
+
+msgid "Choose which prayers trigger a post-prayer adhkar reminder."
+msgstr "اختر أي صلاة تُفعّل تذكير أذكار ما بعدها."
+
+msgid "After Fajr"
+msgstr "بعد الفجر"
+
+msgid "After Dhuhr"
+msgstr "بعد الظهر"
+
+msgid "After Asr"
+msgstr "بعد العصر"
+
+msgid "After Maghrib"
+msgstr "بعد المغرب"
+
+msgid "After Isha"
+msgstr "بعد العشاء"
+
+msgid "Reading Reminder"
+msgstr "تذكير القراءة"
+
+msgid "Configure how often you receive Quran reading reminders."
+msgstr " Configure how often you receive Quran reading reminders."
+
+msgid "Enable Quran Reminders"
+msgstr "تفعيل تذكيرات القرآن"
+
+msgid "Show periodic reminders to read Quran."
+msgstr "عرض تذكيرات دورية لقراءة القرآن."
+
+msgid "Reminder Frequency"
+msgstr "تكرار التذكير"
+
+msgid "How often to send the Quran reading reminder."
+msgstr "Configure how often you send the Quran reading reminder."
+
+msgid "Daily"
+msgstr "يومياً"
+
+msgid "Weekly (Fridays)"
+msgstr "أسبوعياً (الجمعة)"
+
+msgid "Every 6 Hours"
+msgstr "كل 6 ساعات"
+
+msgid "Random Time"
+msgstr "وقت عشوائي"
+
+msgid "Offset After Prayer"
+msgstr "التأخير بعد الصلاة"
+
+msgid "Minutes after the prayer to send the reminder."
+msgstr "الدقائق بعد الصلاة لإرسال التذكير."
+
+msgid "Window Start Hour"
+msgstr "ساعة البداية"
+
+msgid "Earliest hour for the random reminder (0–23)."
+msgstr "أبكر ساعة للتذكير العشوائي (0–23)."
+
+msgid "Window End Hour"
+msgstr "ساعة النهاية"
+
+msgid "Latest hour for the random reminder (1–24)."
+msgstr "آخر ساعة للتذكير العشوائي (1–24)."
+
+msgid "Daily Goal"
+msgstr "الهدف اليومي"
+
+msgid "Set a target number of pages to read each day."
+msgstr "حدد عدد الصفحات المستهدفة للقراءة يومياً."
+
+msgid "Pages per Day"
+msgstr "صفحات يومياً"
+
+msgid "Your daily Quran reading goal."
+msgstr "هدفك اليومي لقراءة القرآن."
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Repeat"
+msgstr "التكرار"
+
+msgid "Reference"
+msgstr "المصدر"
+
+msgid "Open Adhkar"
+msgstr "فتح الأذكار"
+
+msgid "Import Settings"
+msgstr "استيراد الإعدادات"
+
+msgid "Export Settings"
+msgstr "تصدير الإعدادات"
+
+msgid "Import extension settings from a JSON file."
+msgstr "استيراد إعدادات الامتداد من ملف JSON."
+
+msgid "Export extension settings to a JSON file."
+msgstr "تصدير إعدادات الامتداد إلى ملف JSON."
+
+msgid "Settings exported successfully"
+msgstr "تم تصدير الإعدادات بنجاح"
+
+msgid "Settings imported successfully"
+msgstr "تم استيراد الإعدادات بنجاح"
+
+msgid "Invalid settings file"
+msgstr "ملف إعدادات غير صالح"
+
+msgid "The file does not match the expected format."
+msgstr "الملف لا يتطابق مع التنسيق المتوقع."
+
+msgid "Override"
+msgstr "تجاوز"
+
+msgid "Override system locale for Nidaa UI strings."
+msgstr "تجاوز اللغة النظامية لنصوص واجهة نِداء."
+
+msgid "Enable Friday Reminders"
+msgstr "تفعيل تذكيرات الجمعة"
+
+msgid "Notifications for Thursday night, Friday morning, and Friday afternoon."
+msgstr "إشعارات ليلة الخميس وصباح الجمعة وعصر الجمعة."
+
+msgid "Enable Ashura Reminder"
+msgstr "تفعيل تذكير عاشوراء"
+
+msgid "Reminder on Muharram 10 (Ashura)."
+msgstr "تذكير في محرم 10 (عاشوراء)."
+
+msgid "Ashura Day-Before"
+msgstr "اليوم السابق لعاشوراء"
+
+msgid "Show a heads-up the day before Ashura."
+msgstr "عرض تنبيه قبل يوم من عاشوراء."
+
+msgid "Enable Arafah Reminder"
+msgstr "تفعيل تذكير عرفة"
+
+msgid "Reminder on Dhul Hijjah 9 (Day of Arafah)."
+msgstr "تذكير في ذي الحجة 9 (يوم عرفة)."
+
+msgid "Arafah Day-Before"
+msgstr "اليوم السابق لعرفة"
+
+msgid "Show a heads-up the day before Arafah."
+msgstr "عرض تنبيه قبل يوم من عرفة."
+
+msgid "Enable White Days"
+msgstr "تفعيل الأيام البيض"
+
+msgid "Reminder on the 13th–15th of each Hijri month."
+msgstr "تذكير في 13-15 من كل شهر هجري."
+
+msgid "Friday Times"
+msgstr "أوقات الجمعة"
+
+msgid "Configure when the three Friday reminders are sent."
+msgstr " Configure when the three Friday reminders are sent."
+
+msgid "Thursday Night Time"
+msgstr "وقت ليلة الخميس"
+
+msgid "Hour of the Thursday night reminder (0–23)."
+msgstr "ساعة تذكير ليلة الخميس (0–23)."
+
+msgid "Friday Morning Time"
+msgstr "وقت صباح الجمعة"
+
+msgid "Hour of the Friday morning reminder (0–23)."
+msgstr "ساعة تذكير صباح الجمعة (0–23)."
+
+msgid "Friday Afternoon Time"
+msgstr "وقت عصر الجمعة"
+
+msgid "Hour of the Friday afternoon reminder (0–23)."
+msgstr "ساعة تذكير عصر الجمعة (0–23)."
+
+msgid "Ramadan Mode"
+msgstr "وضع رمضان"
+
+msgid "Active when Hijri month is Ramadan (9)."
+msgstr "نشط عندما يكون الشهر الهجري هو رمضان (9)."
+
+msgid "Force Ramadan Mode"
+msgstr "فرض وضع رمضان"
+
+msgid "Override for testing — forces Ramadan display even when not month 9."
+msgstr "تجاوز للاختبار — يفرض عرض رمضان حتى لو لم يكن الشهر 9."
+
+msgid "Enable Taraweeh Reminder"
+msgstr "تفعيل تذكير التراويح"
+
+msgid "Reminder after Isha during Ramadan."
+msgstr "تذكير بعد العشاء خلال رمضان."
+
+msgid "Taraweeh Offset (min)"
+msgstr "تأخير التراويح (د)"
+
+msgid "Minutes after Isha to send the Taraweeh reminder."
+msgstr "الدقائق بعد العشاء لإرسال تذكير التراويح."
+
+msgid "Enable Laylat al-Qadr"
+msgstr "تفعيل ليلة القدر"
+
+msgid "Special reminder on the odd nights of the last ten days of Ramadan."
+msgstr "تذكير خاص في الليالي الوترية من آخر عشر ليالي من رمضان."
+
+msgid "Daily Ramadan Dua"
+msgstr "دعاء يومي في رمضان"
+
+msgid "Show a daily dua during Ramadan."
+msgstr "عرض دعاء يومي خلال رمضان."
