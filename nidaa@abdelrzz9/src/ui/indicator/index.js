@@ -22,14 +22,11 @@ import Clutter from 'gi://Clutter';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import { calculatePrayerTimes } from '../../core/prayer/times.js';
+import { calculatePrayerTimes, getMethodParams } from '../../core/prayer/index.js';
 import { PrayerPopupSection } from '../popup/index.js';
 import { _ } from '../../core/i18n/index.js';
 
 const LOG_PREFIX = '[Nidaa:Indicator]';
-
-/** Which calculation method to use until a preferences UI exists. */
-const DEFAULT_METHOD = 'MWL';
 
 /**
  * Format a minutes-till-prayer value for the panel label.
@@ -67,11 +64,13 @@ function localTimezoneOffset() {
 export class PrayerIndicator extends PanelMenu.Button {
   /**
    * @param {object} location - { latitude, longitude, source, timestamp }
+   * @param {Gio.Settings} [settings] - GSettings object for reading method/params
    */
-  constructor(location) {
+  constructor(location, settings) {
     super(0.0, 'Nidaa', false);
 
     this._location = location;
+    this._settings = settings || null;
     this._prayerTimes = null;
     this._tickId = 0;
     this._midnightId = 0;
@@ -112,18 +111,54 @@ export class PrayerIndicator extends PanelMenu.Button {
   //  Prayer time computation
   // -------------------------------------------------------------------
 
+  _getCalcMethod() {
+    if (!this._settings) return 'MWL';
+    const idx = this._settings.get_int('prayer-method');
+    const methods = ['MWL', 'ISNA', 'Egypt', 'UmmAlQura', 'Karachi', 'Tehran', 'Jafari', 'Custom'];
+    return methods[idx] || 'MWL';
+  }
+
+  _getMadhab() {
+    if (!this._settings) return 'Shafii';
+    return this._settings.get_int('asr-method') === 1 ? 'Hanafi' : 'Shafii';
+  }
+
+  _getHighLatRule() {
+    if (!this._settings) return 'AngleBased';
+    const rules = ['None', 'MiddleOfNight', 'OneSeventh', 'AngleBased'];
+    return rules[this._settings.get_int('high-latitude-method')] || 'AngleBased';
+  }
+
+  _getCustomAngles() {
+    if (!this._settings) return {};
+    return {
+      customFajrAngle: this._settings.get_double('fajr-angle'),
+      customIshaAngle: this._settings.get_double('isha-angle'),
+    };
+  }
+
   _computePrayerTimes() {
     if (!this._location) return null;
 
     const tzHours = localTimezoneOffset();
     const now = new Date();
 
+    const method = this._getCalcMethod();
+    const madhab = this._getMadhab();
+    const highLatitudeRule = this._getHighLatRule();
+
+    const params = getMethodParams({ method, ...this._getCustomAngles() });
+
     return calculatePrayerTimes({
       latitude: this._location.latitude,
       longitude: this._location.longitude,
       timezone: tzHours,
       date: now,
-      method: DEFAULT_METHOD,
+      method,
+      madhab,
+      highLatitudeRule,
+      fajrAngle: params.fajrAngle,
+      ishaAngle: params.ishaAngle,
     });
   }
 

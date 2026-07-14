@@ -283,7 +283,7 @@ const AR = {
   'Shafii (standard)': 'شافعي (قياسي)',
   'Hanafi': 'حنفي',
   'High Latitude Rule': 'قاعدة العرض العالي',
-  'For locations above ~48° latitude where twilight persists.': 'لل地方ات التي تتجاوز خط عرضها 48° حيث يستمر الشفق.',
+  'For locations above ~48° latitude where twilight persists.': 'للمناطق التي تتجاوز خط عرضها 48° حيث يستمر الشفق.',
   'Night Method': 'طريقة الليل',
   'How to determine Fajr/Isha when the sun barely sets.': 'كيفية تحديد الفجر/العشاء عندما يكاد الغروب لا يتلاشى.',
   'None': 'بدون',

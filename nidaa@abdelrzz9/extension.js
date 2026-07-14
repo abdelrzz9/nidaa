@@ -458,7 +458,7 @@ export default class NidaaExtension extends Extension {
     if (this._indicator) return;
 
     try {
-      this._indicator = new PrayerIndicator(location);
+      this._indicator = new PrayerIndicator(location, this._settings);
       console.log(`${LOG_PREFIX} indicator added to panel`);
     } catch (err) {
       console.error(`${LOG_PREFIX} failed to create indicator: ${err}`);

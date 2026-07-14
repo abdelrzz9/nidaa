@@ -180,9 +180,7 @@ function _importSettings(settings) {
 
         for (const [key, value] of Object.entries(parsed.settings)) {
           try {
-            settings.set_value(key, GLib.Variant.new_variant(
-              GLib.Variant.new_value(typeFromValue(value))
-            ));
+            settings.set_value(key, typeFromValue(value));
           } catch (_err) {
             // skip unknown or type-mismatched keys
           }

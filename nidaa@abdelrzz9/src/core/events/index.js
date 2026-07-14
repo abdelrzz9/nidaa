@@ -250,7 +250,6 @@ export function getNextIslamicEvent(date, settings) {
 
   // Ramadan (month 9) — only if not currently in Ramadan
   if (hijri.month !== 9) {
-    const ramadanDay = hijri.month < 9 ? 9 - hijri.month : 12 - hijri.month + 9;
     // Rough estimate
   }
 

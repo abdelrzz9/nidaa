@@ -63,7 +63,8 @@ function makeIcon(iconName) {
 function playSound(soundPath) {
   if (!soundPath) return;
   try {
-    GLib.spawn_command_line_async(`canberra-gtk-play -d "${soundPath}"`);
+    const safePath = GLib.shell_quote(soundPath);
+    GLib.spawn_command_line_async(`canberra-gtk-play -d ${safePath}`);
   } catch (err) {
     console.warn(`${LOG_PREFIX} failed to play sound: ${err}`);
   }
