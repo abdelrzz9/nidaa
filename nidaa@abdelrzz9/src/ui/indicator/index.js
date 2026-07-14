@@ -19,8 +19,8 @@ import GLib from 'gi://GLib';
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 
-import { PanelMenu } from 'resource:///org/gnome/shell/ui/panelMenu.js';
-import { PopupMenu } from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { calculatePrayerTimes } from '../../core/prayer/times.js';
 import { PrayerPopupSection } from '../popup/index.js';
