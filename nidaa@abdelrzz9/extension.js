@@ -1,24 +1,29 @@
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
 import Extension from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { resolveLocation } from './src/core/location/index.js';
 import { PrayerIndicator } from './src/ui/indicator/index.js';
 import { Scheduler } from './src/core/scheduler/index.js';
-import { createEvent } from './src/core/scheduler/event.js';
+import { createPrayerProvider } from './src/core/prayer/index.js';
 import { showNotification, destroyNotifications } from './src/core/notifications/index.js';
 
 const LOG_PREFIX = '[Nidaa]';
+const SCHEMA_ID = 'org.gnome.shell.extensions.nidaa';
 
 export default class NidaaExtension extends Extension {
   enable() {
     console.log(`${LOG_PREFIX} enabling`);
     this._indicator = null;
     this._resolveAttempted = false;
+    this._providerUnsub = null;
 
-    // --- Scheduler + demo provider ---
+    // --- Settings ---
+    this._settings = this._loadSettings();
+
+    // --- Scheduler ---
     this._scheduler = new Scheduler({ onEvent: showNotification });
-    this._scheduler.addProvider(_demoProvider);
     this._scheduler.enable();
 
     // Start location resolution; indicator is created once we have a fix.
@@ -33,6 +38,11 @@ export default class NidaaExtension extends Extension {
       this._scheduler = null;
     }
 
+    if (this._providerUnsub) {
+      this._providerUnsub();
+      this._providerUnsub = null;
+    }
+
     destroyNotifications();
 
     if (this._indicator) {
@@ -40,11 +50,31 @@ export default class NidaaExtension extends Extension {
       this._indicator = null;
     }
 
+    this._settings = null;
     this._resolveAttempted = false;
   }
 
   // ------------------------------------------------------------------
-  //  Location → Indicator pipeline
+  //  Settings
+  // ------------------------------------------------------------------
+
+  _loadSettings() {
+    try {
+      const schemaSource = Gio.SettingsSchemaSource.get_default();
+      const schema = schemaSource.lookup(SCHEMA_ID, true);
+      if (!schema) {
+        console.warn(`${LOG_PREFIX} schema ${SCHEMA_ID} not found — using defaults`);
+        return null;
+      }
+      return new Gio.Settings({ settings_schema: schema });
+    } catch (err) {
+      console.error(`${LOG_PREFIX} failed to load settings: ${err}`);
+      return null;
+    }
+  }
+
+  // ------------------------------------------------------------------
+  //  Location → Indicator + Provider pipeline
   // ------------------------------------------------------------------
 
   async _startLocationResolution() {
@@ -69,7 +99,10 @@ export default class NidaaExtension extends Extension {
         );
         this._indicator.setLocation(location);
 
-        // Tell the scheduler to re-fetch events (prayer times depend on location)
+        // Register the real prayer provider with the scheduler
+        this._registerPrayerProvider(location);
+
+        // Tell the scheduler to re-fetch events
         if (this._scheduler) this._scheduler.refresh();
       } else {
         console.warn(`${LOG_PREFIX} no location available — indicator will stay in placeholder state`);
@@ -77,6 +110,25 @@ export default class NidaaExtension extends Extension {
     } catch (err) {
       console.error(`${LOG_PREFIX} location resolution failed: ${err}`);
     }
+  }
+
+  /**
+   * Register the prayer event provider with the scheduler.
+   * Unregisters any previous provider first.
+   */
+  _registerPrayerProvider(location) {
+    if (this._providerUnsub) {
+      this._providerUnsub();
+      this._providerUnsub = null;
+    }
+
+    const provider = createPrayerProvider({
+      location,
+      settings: this._settings,
+    });
+
+    this._providerUnsub = this._scheduler.addProvider(provider);
+    console.log(`${LOG_PREFIX} prayer provider registered`);
   }
 
   /**
@@ -93,32 +145,4 @@ export default class NidaaExtension extends Extension {
       console.error(`${LOG_PREFIX} failed to create indicator: ${err}`);
     }
   }
-}
-
-// ------------------------------------------------------------------
-//  Demo event provider — proves the scheduler + notification pipeline
-// ------------------------------------------------------------------
-
-/**
- * Fires a test notification 30 seconds after being queried.
- * This is intentionally trivial — real providers (prayer, adhkar, etc.)
- * will be added in later prompts.
- */
-function _demoProvider(date) {
-  const now = new Date();
-  const fireTime = new Date(now.getTime() + 30 * 1000); // 30 s from now
-
-  return [
-    createEvent({
-      type: 'demo',
-      title: 'Nidaa is active',
-      description: 'Scheduler and notification pipeline working. This demo fires 30 s after enable.',
-      time: fireTime,
-      priority: 2, // low priority — gentle nudge, not urgent
-      icon: 'alarm-symbolic',
-      actions: [
-        { label: 'Got it', callback: () => console.log(`${LOG_PREFIX} demo: "Got it" clicked`) },
-      ],
-    }),
-  ];
 }
