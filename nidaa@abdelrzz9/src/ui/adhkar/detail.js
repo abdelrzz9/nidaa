@@ -20,8 +20,7 @@ import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 import Pango from 'gi://Pango';
 
-import { Main } from 'resource:///org/gnome/shell/ui/main.js';
-import { ModalDialog } from 'resource:///org/gnome/shell/ui/modalDialog.js';
+import * as ModalDialog from 'resource:///org/gnome/shell/ui/modalDialog.js';
 
 import { getAdhkarContent } from '../../core/adhkar/index.js';
 
@@ -53,7 +52,7 @@ export function showAdhkarDetail(category, lang = 'en') {
     return;
   }
 
-  const dialog = new ModalDialog({
+  const dialog = new ModalDialog.ModalDialog({
     styleClass: 'nidaa-adhkar-dialog',
     destroyOnClose: true,
   });

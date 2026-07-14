@@ -21,7 +21,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
-import { Main } from 'resource:///org/gnome/shell/ui/main.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 const LOG_PREFIX = '[Nidaa:Notifications]';
