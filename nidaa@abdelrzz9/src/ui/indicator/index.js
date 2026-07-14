@@ -47,12 +47,18 @@ function countdownText(prayerName, minutesLeft) {
 }
 
 /**
- * Compute the local UTC offset in hours for the system timezone.
- * GLib.DateTime.get_utc_offset() returns seconds.
+ * Compute the local UTC offset in hours using pure JavaScript.
+ * Avoids the GLib.DateTime.get_utc_offset() issue where the return
+ * value may be in microseconds (GTimeSpan) depending on the GJS version.
  */
 function localTimezoneOffset() {
-  const now = GLib.DateTime.new_now_local();
-  return now.get_utc_offset() / 3600;
+  const now = new Date();
+  const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+  const localMinutes = now.getHours() * 60 + now.getMinutes();
+  let diff = (localMinutes - utcMinutes) / 60;
+  if (diff > 12) diff -= 24;
+  if (diff < -12) diff += 24;
+  return diff;
 }
 
 export class PrayerIndicator extends PanelMenu.Button {

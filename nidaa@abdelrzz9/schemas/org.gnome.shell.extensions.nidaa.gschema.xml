@@ -97,6 +97,55 @@
       <summary>Volume for adhan playback (0.0 – 1.0)</summary>
     </key>
 
+    <key name="prayer-snooze-duration" type="i">
+      <default>10</default>
+      <summary>Snooze duration in minutes</summary>
+      <description>How long to snooze a prayer notification before re-alerting.</description>
+    </key>
+
+    <key name="prayer-iqamah-reminder-offset" type="i">
+      <default>0</default>
+      <summary>Iqamah reminder offset in minutes</summary>
+      <description>
+        Minutes after the adhan to fire an iqamah reminder.
+        0 disables the iqamah reminder.
+      </description>
+    </key>
+
+    <key name="prayer-ending-soon-offset" type="i">
+      <default>0</default>
+      <summary>Prayer-ending-soon warning offset in minutes</summary>
+      <description>
+        Minutes before the next prayer to fire a "prayer time ending soon" warning.
+        0 disables the warning.
+      </description>
+    </key>
+
+    <key name="prayer-sound-fajr" type="s">
+      <default>''</default>
+      <summary>Sound file path for Fajr adhan</summary>
+    </key>
+
+    <key name="prayer-sound-dhuhr" type="s">
+      <default>''</default>
+      <summary>Sound file path for Dhuhr adhan</summary>
+    </key>
+
+    <key name="prayer-sound-asr" type="s">
+      <default>''</default>
+      <summary>Sound file path for Asr adhan</summary>
+    </key>
+
+    <key name="prayer-sound-maghrib" type="s">
+      <default>''</default>
+      <summary>Sound file path for Maghrib adhan</summary>
+    </key>
+
+    <key name="prayer-sound-isha" type="s">
+      <default>''</default>
+      <summary>Sound file path for Isha adhan</summary>
+    </key>
+
     <!-- ======== Adhkar ======== -->
     <key name="adhkar-enabled" type="b">
       <default>true</default>
