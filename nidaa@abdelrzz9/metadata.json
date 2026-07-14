@@ -1,0 +1,14 @@
+{
+  "name": "Nidaa",
+  "description": "Islamic prayer times, reminders, and more — right in your GNOME Shell.",
+  "uuid": "nidaa@abdelrzz9",
+  "shell-version": [
+    "45",
+    "46",
+    "47"
+  ],
+  "version": 1,
+  "url": "https://github.com/abdelrzz9/nidaa",
+  "gettext-domain": "nidaa",
+  "session-modes": ["user", "unlock-dialog"]
+}
