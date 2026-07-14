@@ -10,4 +10,5 @@ export default class NidaaExtension extends Extension {
     this._enabled = false;
     console.log('Nidaa disabled');
   }
+  
 }
