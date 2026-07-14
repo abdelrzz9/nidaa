@@ -129,7 +129,7 @@ export function daysInHijriMonth(year, month) {
 
 /**
  * Compute the Julian Day Number (JDN) for a Gregorian date.
- * Uses the standard astronomical formula.
+ * Standard astronomical formula (Meeus, "Astronomical Algorithms").
  */
 function _gregorianToJDN(year, month, day) {
   const a = Math.floor((14 - month) / 12);
@@ -157,17 +157,73 @@ function _jdnToGregorian(jdn) {
 }
 
 // ------------------------------------------------------------------
-//  Kuwaiti algorithm — core conversion
+//  Kuwaiti algorithm — Hijri ↔ JDN
 // ------------------------------------------------------------------
 
-/** Civil epoch: JDN for 1 Muharram 1 AH. */
-const EPOCH = 1948084;
+/**
+ * Convert a Hijri date to a JDN.
+ * Formula: JDN = ⌊(11y+3)/30⌋ + 354y + 30m − ⌊(m−1)/2⌋ + d + 1948055
+ *
+ * Reference: "Calendrical Calculations" by Dershowitz & Reingold,
+ *            and the Microsoft .NET HijriCalendar documentation.
+ */
+function _hijriToJDN(year, month, day) {
+  return Math.floor((11 * year + 3) / 30) +
+    354 * year +
+    30 * month -
+    Math.floor((month - 1) / 2) +
+    day +
+    1948055;
+}
+
+/**
+ * Kuwaiti tabular algorithm: JDN → Hijri date.
+ *
+ * This is the reverse of _hijriToJDN.  We solve for (y, m, d) given
+ * a Julian Day Number.  The algorithm is iterative but fast (at most
+ * ~1500 iterations for dates in the range AH 1–9999).
+ */
+function _jdnToHijri(jdn) {
+  // Step 1: Estimate the Hijri year.
+  // Average Hijri year = 354 + 11/30 = 10631/30 ≈ 354.3667 days.
+  // The epoch offset means: z = JDN - 1948055, and z ≈ 10631y/30.
+  const z = jdn - 1948055;
+  let y = Math.floor(30 * z / 10631);
+
+  // Step 2: Refine — find the exact year.
+  // The Hijri year y starts at JDN = _hijriToJDN(y, 1, 1).
+  // We need the largest y such that _hijriToJDN(y, 1, 1) <= jdn.
+  while (_hijriToJDN(y + 1, 1, 1) <= jdn) y++;
+  while (_hijriToJDN(y, 1, 1) > jdn) y--;
+
+  // Step 3: Find the month.
+  // The Hijri month m of year y starts at _hijriToJDN(y, m, 1).
+  let m = 1;
+  for (let i = 1; i <= 12; i++) {
+    if (_hijriToJDN(y, i, 1) > jdn) break;
+    m = i;
+  }
+
+  // Step 4: Find the day.
+  const d = jdn - _hijriToJDN(y, m, 1) + 1;
+
+  return { year: y, month: m, day: d };
+}
+
+// ------------------------------------------------------------------
+//  Core conversion API
+// ------------------------------------------------------------------
 
 /**
  * Convert a Gregorian Date to a Hijri date.
  *
+ * Uses the Kuwaiti tabular algorithm.  Note: tabular Hijri calculations
+ * can differ by ±1 day from local moon-sighting announcements.  This is
+ * an inherent limitation of any calculated (non-observation-based)
+ * Islamic calendar.
+ *
  * @param {Date} gregorianDate
- * @returns {{ day: number, month: number, monthName: string, monthNameAr: string, year: number }}
+ * @returns {{ day: number, month: number, monthName: string, monthNameAr: string, year: number }|null}
  */
 export function getHijriDate(gregorianDate) {
   if (!(gregorianDate instanceof Date) || isNaN(gregorianDate.getTime())) {
@@ -181,28 +237,13 @@ export function getHijriDate(gregorianDate) {
     gregorianDate.getDate()
   );
 
-  const z = jdn - EPOCH;
-
-  // Year calculation (30-year cycle)
-  const cyc = Math.floor(z / 10631);
-  let remainder = z - 10631 * cyc;
-  const j = Math.floor((remainder - 1) / 30.6001); // shift by 1 for 1-indexed months
-  const year = 30 * cyc + j;
-
-  // Month and day within the year
-  remainder -= Math.floor(j * 30.6001 + 1);
-  let month = Math.floor((remainder + 28.5001) / 29.5);
-  if (month > 12) month = 12;
-  const day = remainder - Math.floor(29.5001 * (month - 1)) + 1;
-
-  const names = MONTH_NAMES_EN;
-  const namesAr = MONTH_NAMES_AR;
+  const { year, month, day } = _jdnToHijri(jdn);
 
   return {
     day,
     month,
-    monthName: names[month] || '',
-    monthNameAr: namesAr[month] || '',
+    monthName: MONTH_NAMES_EN[month] || '',
+    monthNameAr: MONTH_NAMES_AR[month] || '',
     year,
   };
 }
@@ -227,8 +268,7 @@ export function hijriToGregorian(year, month, day) {
     return null;
   }
 
-  const jdn = Math.floor((11 * year + 3) / 30) + 354 * year +
-    30 * month - Math.floor((month - 1) / 2) + day + 1948055;
+  const jdn = _hijriToJDN(year, month, day);
 
   const greg = _jdnToGregorian(jdn);
   return new Date(greg.year, greg.month - 1, greg.day);

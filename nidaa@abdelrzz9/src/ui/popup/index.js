@@ -23,6 +23,7 @@ import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 
 import { readProgress, incrementPage } from '../../core/quran/store.js';
+import { getHijriDate } from '../../core/hijri/index.js';
 
 const LOG_PREFIX = '[Nidaa:Popup]';
 
@@ -207,6 +208,22 @@ export class PrayerPopupSection {
       const row = buildRow(label, timeStr, state, minutesLeft);
       this.actor.add_child(row);
       this._rows.push(row);
+    }
+
+    // --- Hijri date footer ---
+    const hijri = getHijriDate(now);
+    if (hijri) {
+      const hijriText = `${hijri.day} ${hijri.monthName} ${hijri.year} AH`;
+      const gregText = now.toLocaleDateString('en-GB', {
+        weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+      });
+      const footerText = `${hijriText}  •  ${gregText}`;
+      const footer = new St.Label({
+        text: footerText,
+        style_class: 'nidaa-hijri-footer',
+      });
+      this.actor.add_child(footer);
+      this._rows.push(footer);
     }
   }
 

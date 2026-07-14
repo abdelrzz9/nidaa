@@ -205,3 +205,11 @@
   font-size: 11px;
   border-radius: 4px;
 }
+
+/* ── Hijri date footer ───────────────────────────────────────────── */
+
+.nidaa-hijri-footer {
+  padding: 6px 12px 2px;
+  font-size: 11px;
+  opacity: 0.7;
+}
